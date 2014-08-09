@@ -1,4 +1,5 @@
-cameleon
+Cameleon
 ========
 
-A simple Web application framework.
+A simple MVC style Web application framework.
+Utilizing the Bootstrap Frontend Framework from Twitter, Inc.
