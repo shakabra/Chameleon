@@ -14,7 +14,7 @@ require_once('config.php');
  *
  * @param string $pages_dir 'pages' by default, otherwise the directory
  * from where pages are included from.
- * @return include A php file is included in the document where called.
+ * @return void Includes A php file in the document.
  */
 function get_page_from_uri($pages_dir='pages') {
     $URI = ltrim($_SERVER['REQUEST_URI'], '/');
