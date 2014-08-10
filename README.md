@@ -1,7 +1,7 @@
 Cameleon
 ========
 
-A simple MVC style Web application framework utilizing the Bootstrap frontend framework from Twitter, Inc.
+A simple MVC style Web application framework utilizing the [Bootstrap](http://getbootstrap.com/) frontend framework from Twitter, Inc.
 
 The base files are `config.php`, `index.php` and `controller.php`.
 `config.php` is where we store the site's configuration details. The `index.php` provides the site's overall html template and `index.php`'s business logic is done inside `controller.php`.
