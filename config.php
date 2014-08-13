@@ -46,5 +46,5 @@ $nav_config = [
 
 // Create a Registry and ddd our shared objects.
 $Registry = new \Registry();
-$Registry::add(new \Database());
+# $Registry::add(new \Database());
 $Registry::add(new \Nav($nav_config));
