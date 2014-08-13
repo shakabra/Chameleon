@@ -8,7 +8,7 @@ namespace authentication;
  * @param array $mods An associative array of modifications to the base
  * template markup.
  */
-function print_authenticator($mods=null) {
+function html_authenticator($mods=null) {
     $class = 'authenticator';
     $class .= ' col-md-4';
     $action = '/resources/php/request_handler.php';
@@ -25,7 +25,7 @@ function print_authenticator($mods=null) {
   </form>
 </div>
 EOT;
-    print($html);
+    return $html;
 }
 
 /**
