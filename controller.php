@@ -2,6 +2,9 @@
 namespace app;
 
 require_once('config.php');
+require_once(PHP_DIR.'/authentication.php');
+
+use authentication as auth;
 
 
 /**
@@ -12,8 +15,11 @@ require_once('config.php');
  *
  *     NOTE: Includes a 404.php page by default.
  *
+ * @todo: Make the $pages_dir parameter a configuration option.
+ *
  * @param string $pages_dir 'pages' by default, otherwise the directory
  * from where pages are included from.
+ *
  * @return void Includes A php file in the document.
  */
 function get_page_from_uri($pages_dir='pages') {
@@ -30,5 +36,19 @@ function get_page_from_uri($pages_dir='pages') {
     }
     else {
         include("$pages_dir/404.php");
+    }
+}
+
+function print_authenticator() {
+    print(auth\html_authenticator());
+}
+
+function print_session() {
+    echo "cookie: "; print_r($_COOKIE); print "\n<br>";
+    if ($_SESSION) {
+        print_r($_SESSION);
+    }
+    else {
+        print('No Session');
     }
 }

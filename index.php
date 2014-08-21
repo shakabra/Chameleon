@@ -24,7 +24,10 @@ require_once('controller.php'); ?>
 <body>
   <div class="container">
     <div class="row">
-
+      <?php print_authenticator(); ?>
+      <div class="col-md-4">
+      <?php print_session(); ?>
+      </div>
     </div>
   </div>
 
