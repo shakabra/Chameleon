@@ -5,6 +5,10 @@ require_once('resources/php/Registry.php');
 require_once('resources/php/Database.php');
 require_once('resources/php/Nav.php');
 
+use Registery;
+use Database;
+use Nav;
+
 
 error_reporting(E_ERROR | E_PARSE | E_WARNING);
 #(E_ERROR | E_PARSE | E_WARNING)
@@ -46,6 +50,6 @@ $nav_config = [
 ];
 
 // Create a Registry and ddd our shared objects.
-$Registry = new \Registry();
-$Registry::add(new \Database());
-$Registry::add(new \Nav($nav_config));
+$Registry = new Registry();
+$Registry::add(new Database());
+$Registry::add(new Nav($nav_config));
