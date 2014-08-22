@@ -1,7 +1,7 @@
 <?php
 namespace app;
-require_once('controller.php'); ?>
-
+require_once('controller.php'); 
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,6 +9,9 @@ require_once('controller.php'); ?>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
+
+  <script src="config.js"></script>
+  <script src="resources/js/utils.js"></script>
 
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="resources/css/layout.css">
@@ -22,14 +25,6 @@ require_once('controller.php'); ?>
   <![endif]-->
 </head>
 <body>
-  <div class="container">
-    <div class="row">
-      <?php print_authenticator(); ?>
-      <div class="col-md-4">
-      <?php print_session(); ?>
-      </div>
-    </div>
-  </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>

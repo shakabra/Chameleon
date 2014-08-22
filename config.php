@@ -40,11 +40,12 @@ $nav_config = [
     'nav_root' => 'pages',
     'files' => true,
     'dirs' => false,
-    'ignore' => ['404.php', 'test.php'],
+    'ignore' => ['404.php', 'post.php', 'test.php'],
     'ignore_files_by_ext' => ['.swp'],
+    'custom_html' => null
 ];
 
 // Create a Registry and ddd our shared objects.
 $Registry = new \Registry();
-# $Registry::add(new \Database());
+$Registry::add(new \Database());
 $Registry::add(new \Nav($nav_config));
