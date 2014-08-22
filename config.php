@@ -5,7 +5,7 @@ require_once('resources/php/Registry.php');
 require_once('resources/php/Database.php');
 require_once('resources/php/Nav.php');
 
-use Registery;
+use Registry;
 use Database;
 use Nav;
 
