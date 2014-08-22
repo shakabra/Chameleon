@@ -1,4 +1,4 @@
-Cameleon
+Chameleon
 ========
 
 A simple MVC style Web application framework utilizing the [Bootstrap](http://getbootstrap.com/) frontend framework from Twitter, Inc.
@@ -11,3 +11,5 @@ The `pages` directory is where the site's page specific content is stored. A fun
 @author Jason Favrod <lakona808@gmail.com>
 
 @version 0.1
+
+Todo:
