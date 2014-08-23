@@ -231,10 +231,12 @@ class Database {
     }
 
     /**
-     * Query the database, get the result, and return a associtive
-     * array for single row results and a mulit-dimensional array of
-     * associative arrays for each row of a multi-row result. Return
-     * False if the query fails.
+     * Query the database, get the result, and return it.
+     * If a query result has one row, an associtive array containing
+     * the result will be returned, if the result has many rows, a
+     * mulit-dimensional array associative will be returned.
+     *
+     * True if successfull; False if the query fails.
      *
      * @param string $query The query to send to the database.
      *
@@ -246,46 +248,32 @@ class Database {
         $result = $this->connection->query($query);
         $this->close();
 
-        if (!$result) return False;
         if ($result->num_rows > 1) {
             $all_entries = [];
             while ($row = $result->fetch_assoc()) {
-                $all_entries[] = $row;
+                array_push($all_entries, $row);
             }
-            return $all_entries;
-        } else {
-            return $result->fetch_assoc();
+            $result = $all_entries;
+        } elseif ($result->num_rows === 1) {
+            $result = $result->fetch_assoc();
         }
+
+        return $result;
     }
 
     /**
-     * @todo THIS FUNCTION IS BROKEN!
-     *
-     * Creates an index based on an id attribute and another given
-     * attribute of a given table (or of the selected table if a table
-     * argument is not given).
-     *
-     * @param string $attrib The attribute of the table that will be
-     * paired with id to create the index.
-     * @param string|null $table The table to create an index of (if
-     * null will use $selected_table or fail).
-     *
-     * @return json A json encoded string
+     * Add an authorized user to the 'users' table.
+     * 
+     * @param type $username - username from the input form
+     * @param type $salt - uniq string stored in database
+     * @param type $hashed_salted_password - hashed password with salt added
      */
-    public function get_id_index($attrib, $table=null) {
-        if (!$table) {
-            $table=$this->selected_table;
-        }
-
-        $index = [];
-        if ($table && $attrib) {
-            foreach ($this->select_attribs("id,$attrib", $table) as $entry) {
-                array_push($index, $entry);
-            }
-            return json_encode($index);
-        }
-        else {
-            return false;
-        }
+    public function add_authorized_user($username, $salt, $salted_password){
+        $query = 'INSERT INTO users (username, salt, salted_password) ' .
+            "VALUES ('$username', '$salt', '$hashed_salted_password')";
+        
+        $insert_user_query = $this->query($query);
+        
+        return $insert_user_query;
     }
 }
