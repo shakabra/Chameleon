@@ -263,6 +263,8 @@ class Database {
 
     /**
      * Add an authorized user to the 'users' table.
+     * @todo make the args a container type and a variable so one can
+     * vary the table to insert into.
      * 
      * @param type $username - username from the input form
      * @param type $salt - uniq string stored in database
