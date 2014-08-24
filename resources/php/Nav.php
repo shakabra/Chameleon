@@ -22,11 +22,19 @@
  */
 
 class Nav {
+
+    /**
+     * The file name of the page you want displayed by default.
+     */
+    private $default_page = 0;
+
+
     /**
      * @property string $nav_root The root directory of where navigation
      *                            will be created for.
      */
-    private $nav_root  = "no root set";
+    private $nav_root  = 0;
+
 
     /**
      * @property array $nav_point Stores strings representing items in the
@@ -34,16 +42,15 @@ class Nav {
      */
     private $nav_point = [];
 
+
     public function __construct($config) {
         try {
             $this->check_config($config);
             $this->nav_root = $config['nav_root'];
+            !$config['default_page']?:$this->default_page = $config['default_page'];
         }
         catch (Exception $e) {
             print("<pre><b>Navigation Error</b></pre>");
-            // @todo should this be a return statement?
-            // this is going to be what's displayed instead of
-            // navigation, because initial check of $config failed.
         }
 
         try {
@@ -71,61 +78,6 @@ class Nav {
         }
     }
 
-    /**
-     * Checks the $config array to make sure required items exist and are
-     * of the correct type. If the array is invalid, errors are logged and an
-     * Exception is thrown.
-     *
-     * @param array $config The configuration to be checked.
-     *
-     * @returns void
-     *
-     * @todo Make this error handling go away and do it better; let's make it
-     * useful: good feedback, easy and to find and fix the problem.
-     */
-    private function check_config($config) {
-        $err = 0;
-
-        if (!array_key_exists('nav_root', $config)) {
-            $e = new Exception("No 'nav_root' in Nav configuration");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if (!array_key_exists('files', $config)) {
-            $e = new Exception("No 'files' directive in Nav configuration");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if (!array_key_exists('dirs', $config)) {
-            $e = new Exception("No 'dirs' directive in Nav configuration");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if (!is_dir($config['nav_root'])) {
-            $e = new Exception("No 'nav_root' in Nav configuration");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if (!is_bool($config['files'])) {
-            $e = new Exception("The configuration directive 'files' is not a boolean value");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if (!is_bool($config['dirs'])) {
-            $e = new Exception("The configuration directive 'dirs' is not a boolean value");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if ($err > 0) {
-            throw new Exception("The configuration of Nav is invalid; see error.log");
-        }
-    }
 
     /**
      * Takes an array of  directory contents and unsets any items in that array
@@ -197,6 +149,70 @@ class Nav {
             $string .= "(pt: $pt), ";
         }
         return rtrim($string, ' ,') . ' ]';
+    }
+
+    public function get_nav_root() {
+        return $this->nav_root;
+    }
+
+    public function get_default_page() {
+        return $this->default_page;
+    }
+
+    /**
+     * Checks the $config array to make sure required items exist and are
+     * of the correct type. If the array is invalid, errors are logged and an
+     * Exception is thrown.
+     *
+     * @param array $config The configuration to be checked.
+     *
+     * @returns void
+     *
+     * @todo Make this error handling go away and do it better; let's make it
+     * useful: good feedback, easy and to find and fix the problem.
+     */
+    private function check_config($config) {
+        $err = 0;
+
+        if (!array_key_exists('nav_root', $config)) {
+            $e = new Exception("No 'nav_root' in Nav configuration");
+            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
+            $err++;
+        }
+
+        if (!array_key_exists('files', $config)) {
+            $e = new Exception("No 'files' directive in Nav configuration");
+            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
+            $err++;
+        }
+
+        if (!array_key_exists('dirs', $config)) {
+            $e = new Exception("No 'dirs' directive in Nav configuration");
+            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
+            $err++;
+        }
+
+        if (!is_dir($config['nav_root'])) {
+            $e = new Exception("No 'nav_root' in Nav configuration");
+            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
+            $err++;
+        }
+
+        if (!is_bool($config['files'])) {
+            $e = new Exception("The configuration directive 'files' is not a boolean value");
+            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
+            $err++;
+        }
+
+        if (!is_bool($config['dirs'])) {
+            $e = new Exception("The configuration directive 'dirs' is not a boolean value");
+            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
+            $err++;
+        }
+
+        if ($err > 0) {
+            throw new Exception("The configuration of Nav is invalid; see error.log");
+        }
     }
     
     public function toHtml() {
