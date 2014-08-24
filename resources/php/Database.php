@@ -5,9 +5,9 @@
  *
  * This Database class requires that the hostname (DB_HOST), username
  * (BD_USER), password (DB_PASS), and database name (BD_NAME) be
- * defined constants. The Database object can be instanciated with or
+ * defined constants. The Database object can be instantiated with or
  * without a [mysql database] table selected. If a table is passed as
- * an argument at time of instanciation, or later with the
+ * an argument at time of instantiation, or later with the
  * set_selected_table() method, the Database object will use the
  * selected_table in subsequent Database method calls that have a
  * $table parameter.
@@ -186,7 +186,7 @@ class Database {
             }
             else {
                 throw new Exception(__METHOD__ .' No valid $table argument or'.
-                    ' $selected_table propertey.');
+                    ' $selected_table property.');
             }
         }
         return $this->table_attribs;
@@ -232,7 +232,7 @@ class Database {
 
     /**
      * Query the database, get the result, and return it.
-     * If a query result has one row, an associtive array containing
+     * If a query result has one row, an assocative array containing
      * the result will be returned, if the result has many rows, a
      * mulit-dimensional array associative will be returned.
      *
