@@ -25,9 +25,6 @@ function get_page_from_uri($pages_dir='pages') {
     else if (in_array("$URI.php", scandir("$pages_dir"))) {
         include("$pages_dir/$URI.php");
     }
-    else if (preg_match('|^posts\?id=\d+$|', $URI)) {
-        include('pages/posts.php');
-    }
     else {
         include("$pages_dir/404.php");
     }
