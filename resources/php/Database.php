@@ -45,7 +45,8 @@ class Database {
      * @return void
      */
     private function connect() {
-        $this->connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+        $this->connection = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME,
+            DB_USER, DB_PASS);
         if ($this->connection->connect_error) {
             throw new Exception(__METHOD__ . ', mysqli Connection Error.'.
                 'Check defined DB_ constants.');
@@ -96,6 +97,15 @@ class Database {
      * @return array Containing the tables in the connected database.
      */
     public function get_tables() {
+        if (!$get_tables) {
+            try {
+                $this->set_tables();
+            }
+            catch(Exception $e) {
+                error_log($e);
+                print '<p>Could not get tables.</p>';
+            }
+        }
         return $this->tables;
     }
 
