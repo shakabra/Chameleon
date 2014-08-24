@@ -3,6 +3,7 @@ namespace app;
 
 require_once('config.php');
 
+use Registry;
 
 /**
  * Grab the server request URI, trim off the leading slash, look inside
@@ -19,8 +20,8 @@ require_once('config.php');
 function get_page_from_uri($pages_dir='pages') {
     $URI = ltrim($_SERVER['REQUEST_URI'], '/');
 
-    if ($URI == ""){
-        include("$pages_dir/home.php");
+    if ($URI == "" && $default_page = Registry::get('Nav')->get_default_page()){
+        include($pages_dir."/$default_page");
     }
     else if (in_array("$URI.php", scandir("$pages_dir"))) {
         include("$pages_dir/$URI.php");
