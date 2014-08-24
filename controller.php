@@ -11,6 +11,9 @@ use Registry;
  * such a file, return an include statement with the file specified as
  * its argument.
  *
+ * @todo use filter_input() instead of referring to $_SERVER (actually
+ * client) data directy.
+ *
  *     NOTE: Includes a 404.php page by default.
  *
  * @param string $pages_dir 'pages' by default, otherwise the directory
