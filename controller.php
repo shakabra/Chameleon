@@ -1,7 +1,7 @@
 <?php
 namespace app;
 
-require_once('config.php');
+require_once('myconfig.php');
 
 use Registry;
 
