@@ -5,12 +5,7 @@
  *
  * This Database class requires that the hostname (DB_HOST), username
  * (BD_USER), password (DB_PASS), and database name (BD_NAME) be
- * defined constants. The Database object can be instantiated with or
- * without a [mysql database] table selected. If a table is passed as
- * an argument at time of instantiation, or later with the
- * set_selected_table() method, the Database object will use the
- * selected_table in subsequent Database method calls that have a
- * $table parameter.
+ * defined constants.
  *
  *       NOTE:
  *       Database column headers referred to as attributes
@@ -39,40 +34,9 @@ class Database {
     private $tables = null;
 
     /**
-     * @var string $selected_table A mysql database table, used as a
-     * default to all method calls that define a $table parameter.
+     * Constructor.
      */
-    private $selected_table = null;
-
-    /**
-     * @var array $table_attrib Stores table attributes obtained from a
-     * DESCRIBE mysql query to a database.
-     */
-    private $table_attribs = null;
-
-    /**
-     * Constructor sets the value of tables property and optionally the
-     * selected_table property.
-     * 
-     * If the constructor is given a valid $table argument at time of
-     * instanciation the argument becomes the $selected_table, and will
-     * be used by default in methods that define a $table paramater.
-     * Else, the $selected_table property is unchanged (initially a
-     * null value) and method calls with a $table parameter will
-     * require a valid $table argument to be passed.
-     *
-     * @param string|null $table Set to null by default, optionally the
-     * name of a database table to be used in subsequent calls to the
-     * database.
-     *
-     * @return void
-     */
-    public function __construct($table=null) {
-        $this->set_tables();
-        if ($table) {
-            $this->set_selected_table($table);
-        }
-    }
+    //public function __construct() {}
 
     /**
      * Used by this Database object to create a connection to a mysql
@@ -135,99 +99,23 @@ class Database {
         return $this->tables;
     }
 
-    /** 
-     * Sets the value of the selected_table property.
-     *
-     * @param string $table The mysql database table that will be used
-     * as the default argument for the $table parameter in methods
-     * where it is defined.
-     *
-     * @return void
-     */
-    private function set_selected_table($table) {
-        if (in_array($table, $this->tables)) {
-            $this->selected_table = $table;
-        }
-        else {
-            throw new Exception(__METHOD__ . ', $table argument ' .
-                'not a valid database table.');
-        } 
-    }
 
     /** 
-     * Get the stored value of the $selected_table property.
+     * Gets the attributes of a either a given database table.
      *
-     * If selected table has been set, returns the string stored as
-     * $selected_table, else returns null.
-     * @return string|null
+     * @param string $table The database table whose attribute will be returned.
+     *
+     * @return array|null The attributes of the $table supplied
      */
-    public function get_selected_table() {
-        return $this->selected_table?
-            $this->selected_table : 'No table selected';
-    }
-
-    /** 
-     * Gets the attributes of a either a given database table or the
-     * stored $selected_table.
-     *
-     * @param string|null $table If $table argument is given, will get
-     * attributes for the table supplied, else the attributes for the
-     * table stored as the $selected_table property.
-     *
-     * @return array|null The attributes of either the $table supplied
-     * as an argument or of the stored $selected_table.
-     *
-     * @todo: should I throw an exception if $table_attribs is falsey.
-     */
-    public function get_table_attribs($table=null) {
-        if (!$table) {
-            if ($this->selected_table) {
-                $table = $this->selected_table;
-            }
-            else {
-                throw new Exception(__METHOD__ .' No valid $table argument or'.
-                    ' $selected_table property.');
-            }
-        }
-        return $this->table_attribs;
-    }
-
-    /** 
-     * Sets value of table_attribs property.
-     *
-     * When called queries the database for the attributes of the
-     * $selected_table, or of the $table argument (if supplied).
-     * The result is an associtive array that is stored in the
-     * $table_attribs property.
-     *
-     * @todo Handle this exception
-     * If $selected table is not set and $table is null, print a warning
-     * and return.
-     * @todo Should this privte function make the table param optional?
-     *
-     * @param string|null $table A mysql database table used whose
-     * attributes will be used to set the $table_attribs property. Uses
-     * the $selected_table property by default.
-     *
-     * @return void
-     */
-    private function set_table_attribs($table=null) {
-        if (!$table) {
-            if (!$this->selected_table) {
-                return null;
-            }
-            $table = $this->selected_table;
-        }
-
+    public function get_table_attribs($table) {
         $this->connect();
         $result = $this->connection->query("DESCRIBE $table");
         $this->close();
-
         $attribs = [];
         while ($rows = $result->fetch_assoc()) {
-            $attribs[] = $rows['Field'];
+            array_push($attribs, $rows['Field']);
         }
-        $this->table_attribs = $attribs;
+        return $attribs;
     }
 
     /**
