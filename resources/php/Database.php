@@ -45,7 +45,7 @@ class Database {
      * @return void
      */
     private function connect() {
-        $this->connection = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME,
+        $this->connection = new PDO(DB_DRIVER.':host='.DB_HOST.';dbname='.DB_NAME,
             DB_USER, DB_PASS);
         if ($this->connection->connect_error) {
             throw new Exception(__METHOD__ . ', mysqli Connection Error.'.
@@ -76,14 +76,19 @@ class Database {
     private function set_tables() {
         $this->connect();
         $result = $this->connection->query("SHOW TABLES");
-        $this->close(); 
+#        $this->close(); 
         $tables = [];
 
         if ($result) {
-            while ($row = $result->fetch_array()) {
-                $tables[] = $row[0];
+            if (is_array($result)) {
+                while ($row = $result->fetch_array()) {
+                    $tables[] = $row[0];
+                }
             }
-            $this->tables = $tables;
+            else {
+                $tables = $result;
+                $this->tables = $tables;
+            }
         }
         else {
             throw new Exception(__METHOD__.' (line '.__LINE__.') '.
@@ -122,6 +127,7 @@ class Database {
         $result = $this->connection->query("DESCRIBE $table");
         $this->close();
         $attribs = [];
+
         while ($rows = $result->fetch_assoc()) {
             array_push($attribs, $rows['Field']);
         }
@@ -174,6 +180,5 @@ class Database {
         
         $insert_user_query = $this->query($query);
         
-        return $insert_user_query;
     }
 }
