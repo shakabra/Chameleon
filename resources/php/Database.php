@@ -48,7 +48,7 @@ class Database {
         $this->connection = new PDO(DB_DRIVER.':host='.DB_HOST.';dbname='.DB_NAME,
             DB_USER, DB_PASS);
         if ($this->connection->connect_error) {
-            throw new Exception(__METHOD__ . ', mysqli Connection Error.'.
+            throw new Exception(__METHOD__ . ', Database Connection Error.'.
                 'Check defined DB_ constants.');
         }
     }
@@ -63,8 +63,38 @@ class Database {
      * @return void
      */
     private function close() {
-        $this->connection->close();
         $this->connection = null;
+    }
+
+    /**
+     * Query the database, get the result, and return it.
+     * If a query result has one row, an assocative array containing
+     * the result will be returned, if the result has many rows, a
+     * mulit-dimensional associative array will be returned.
+     *
+     * True if successfull; False if the query fails.
+     *
+     * @param string $query The query to send to the database.
+     *
+     * @return array|False Returns an array or multi-dimensional array
+     * if successful and False if not.
+     */
+    public function query($query, $fetch_mode=PDO::FETCH_ASSOC) {
+        $this->connect();
+        $result = $this->connection->query($query, $fetch_mode)->fetchAll();
+        $this->close();
+
+        if (is_array($result)) {
+            $parsed_result = array();
+            foreach ($result as $row) {
+                foreach ($row as $db_entry) {
+                    array_push($parsed_result, $db_entry);
+                }
+            }
+            $result = $parsed_result;
+        }
+
+        return $result;
     }
 
     /** 
@@ -74,26 +104,12 @@ class Database {
      * @return void
      */
     private function set_tables() {
-        $this->connect();
-        $result = $this->connection->query("SHOW TABLES");
-#        $this->close(); 
-        $tables = [];
-
-        if ($result) {
-            if (is_array($result)) {
-                while ($row = $result->fetch_array()) {
-                    $tables[] = $row[0];
-                }
-            }
-            else {
-                $tables = $result;
-                $this->tables = $tables;
-            }
+        $tables = $this->query('SHOW TABLES');
+        $_array = array();
+        foreach ($tables as $table) {
+            array_push($_array, $table);
         }
-        else {
-            throw new Exception(__METHOD__.' (line '.__LINE__.') '.
-                'mysqli query failed');
-        }
+        $this->tables = $_array;
     }
 
     /**
@@ -102,7 +118,7 @@ class Database {
      * @return array Containing the tables in the connected database.
      */
     public function get_tables() {
-        if (!$get_tables) {
+        if (!$this->tables) {
             try {
                 $this->set_tables();
             }
@@ -114,7 +130,6 @@ class Database {
         return $this->tables;
     }
 
-
     /** 
      * Gets the attributes of a either a given database table.
      *
@@ -123,45 +138,7 @@ class Database {
      * @return array|null The attributes of the $table supplied
      */
     public function get_table_attribs($table) {
-        $this->connect();
-        $result = $this->connection->query("DESCRIBE $table");
-        $this->close();
-        $attribs = [];
-
-        while ($rows = $result->fetch_assoc()) {
-            array_push($attribs, $rows['Field']);
-        }
-        return $attribs;
-    }
-
-    /**
-     * Query the database, get the result, and return it.
-     * If a query result has one row, an assocative array containing
-     * the result will be returned, if the result has many rows, a
-     * mulit-dimensional array associative will be returned.
-     *
-     * True if successfull; False if the query fails.
-     *
-     * @param string $query The query to send to the database.
-     *
-     * @return array|False Returns an array or multi-dimensional array
-     * if successful and False if not.
-     */
-    public function query($query) {
-        $this->connect();
-        $result = $this->connection->query($query);
-        $this->close();
-
-        if ($result->num_rows > 1) {
-            $all_entries = [];
-            while ($row = $result->fetch_assoc()) {
-                array_push($all_entries, $row);
-            }
-            $result = $all_entries;
-        } elseif ($result->num_rows === 1) {
-            $result = $result->fetch_assoc();
-        }
-
+        $result = $this->query("DESCRIBE $table");
         return $result;
     }
 
