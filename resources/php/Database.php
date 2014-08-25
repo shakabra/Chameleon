@@ -110,7 +110,13 @@ class Database {
     }
 
     public function insert($sql) {
-
+        $result = 0;
+        $this->connect();
+        if ($r = $this->connection->query($sql)) {
+            $result = $r->rowCount();
+        }
+        return $result;
+        $this->close();
     }
 
     /** 
