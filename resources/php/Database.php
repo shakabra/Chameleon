@@ -79,22 +79,38 @@ class Database {
      * @return array|False Returns an array or multi-dimensional array
      * if successful and False if not.
      */
-    public function query($query, $fetch_mode=PDO::FETCH_ASSOC) {
+    public function query($sql) {
         $this->connect();
-        $result = $this->connection->query($query, $fetch_mode)->fetchAll();
+        $result = $this->connection->query($sql, PDO::FETCH_ASSOC);
         $this->close();
-
-        if (is_array($result)) {
-            $parsed_result = array();
-            foreach ($result as $row) {
-                foreach ($row as $db_entry) {
-                    array_push($parsed_result, $db_entry);
-                }
-            }
-            $result = $parsed_result;
-        }
-
         return $result;
+    }
+
+    public function select($sql, $options=0) {
+        $result = array();
+        $this->connect();
+        $raw_result = $this->connection->query($sql, PDO::FETCH_ASSOC)->fetchAll();
+        foreach ($raw_result as $row) {
+            array_push($result, $row);
+        }
+        if ($options['show']) {
+            // Set a variable $rows to the $result and
+            // reset $result to an empty array.
+            $rows = $result;
+            $result = [];
+            foreach ($rows as $db_entry) {
+                array_push($result, $db_entry);
+            } 
+        }
+        else {
+            return $raw_result;
+        }
+        $this->close();
+        return $result;
+    }
+
+    public function insert($sql) {
+
     }
 
     /** 
