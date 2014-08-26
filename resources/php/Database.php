@@ -79,33 +79,19 @@ class Database {
      * @return array|False Returns an array or multi-dimensional array
      * if successful and False if not.
      */
-    public function query($sql) {
+    public function query($sql, $fetch_mode=PDO::FETCH_ASSOC) {
         $this->connect();
-        $result = $this->connection->query($sql, PDO::FETCH_ASSOC);
+        $result = $this->connection->query($sql, $fetch_mode);
         $this->close();
         return $result;
     }
 
-    public function select($sql, $options=0) {
+    public function select($sql) {
         $result = array();
-        $this->connect();
-        $raw_result = $this->connection->query($sql, PDO::FETCH_ASSOC)->fetchAll();
+        $raw_result = $this->query($sql)->fetchAll();
         foreach ($raw_result as $row) {
             array_push($result, $row);
         }
-        if ($options['show']) {
-            // Set a variable $rows to the $result and
-            // reset $result to an empty array.
-            $rows = $result;
-            $result = [];
-            foreach ($rows as $db_entry) {
-                array_push($result, $db_entry);
-            } 
-        }
-        else {
-            return $raw_result;
-        }
-        $this->close();
         return $result;
     }
 
@@ -126,12 +112,14 @@ class Database {
      * @return void
      */
     private function set_tables() {
-        $tables = $this->query('SHOW TABLES');
-        $_array = array();
-        foreach ($tables as $table) {
-            array_push($_array, $table);
-        }
-        $this->tables = $_array;
+        $raw_query = $this->select('SHOW TABLES');
+        $result = array();
+        foreach ($raw_query as $row) {
+            foreach ($row as $table) {
+                array_push($result, $table);
+            }
+        } 
+        $this->tables = $result;
     }
 
     /**
@@ -160,7 +148,11 @@ class Database {
      * @return array|null The attributes of the $table supplied
      */
     public function get_table_attribs($table) {
-        $result = $this->query("DESCRIBE $table");
+        $raw_result = $this->select("DESCRIBE $table");
+        $result = array();
+        foreach ($raw_result as $row) {
+            array_push($result, $row['Field']);
+        }
         return $result;
     }
 
