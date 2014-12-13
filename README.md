@@ -10,7 +10,7 @@ The `index.php` provides the site's overall html template.
 
 The `pages` directory is where the site's page specific content is stored.
 A function in `controller.php` will load the page specific content based on the request URI
-- this requires some modification of the Web server to allow PHP to handle the URIs.
+(this requires modification of the Web server to allow PHP to handle the URIs).
 Each page's business logic should be stored in `resources/php/controllers`.
 
 A guide to [using chameleon](https://lakonacomputers.com/owncloud/public.php?service=files&t=f31cd6e35cce38eb138de2e4975c5d6e) can be found at the following url:
