@@ -17,7 +17,4 @@ A guide to [using chameleon](https://lakonacomputers.com/owncloud/public.php?ser
 https://lakonacomputers.com/owncloud/public.php?service=files&t=f31cd6e35cce38eb138de2e4975c5d6e.
 
 @author Jason Favrod <lakona808@gmail.com>
-
 @version 0.2
-
-Todo: 
