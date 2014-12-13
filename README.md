@@ -11,6 +11,6 @@ The `pages` directory is where the site's page specific content is stored. A fun
 * @author Jason Favrod <lakona808@gmail.com>
 * @author Noel Niles <shakabra321@gmail.com>
 
-@version 0.1
+@version 0.2
 
 Todo:
