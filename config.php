@@ -44,6 +44,7 @@ $nav_config = [
     'nav_root' => 'pages',
     'files' => true,
     'dirs' => false,
+    'default_page' => 'default.php',
     'ignore' => ['404.php', 'post.php', 'test.php'],
     'ignore_files_by_ext' => ['.swp'],
     'custom_html' => null
