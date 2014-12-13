@@ -14,10 +14,11 @@ error_reporting(E_ERROR | E_PARSE | E_WARNING);
 #(E_ERROR | E_PARSE | E_WARNING)
 
 
-// Setup some constant paths.
+// Setup some constants.
 define('APP_ROOT', __DIR__);
 define('PHP_DIR', __DIR__.'/resources/php');
 define('IMG_DIR', '/resources/images');
+define('SITE_TITLE', '');
 
 
 // MySQL settings
