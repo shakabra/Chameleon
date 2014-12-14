@@ -18,8 +18,8 @@
  *       -------------------
  */
 
-class Database {
-
+class Database
+{
     /**
      * @var object(mysqli) $connection "An object which represents the
      * connection to a MySQL Server."
@@ -33,10 +33,12 @@ class Database {
      */
     private $tables = null;
 
+
     /**
      * Constructor.
      */
     //public function __construct() {}
+
 
     /**
      * Used by this Database object to create a connection to a mysql
@@ -44,7 +46,8 @@ class Database {
      *
      * @return void
      */
-    private function connect() {
+    private function connect()
+    {
         $this->connection = new PDO(DB_DRIVER.':host='.DB_HOST.';dbname='.DB_NAME,
             DB_USER, DB_PASS);
         if ($this->connection->connect_error) {
@@ -52,6 +55,7 @@ class Database {
                 'Check defined DB_ constants.');
         }
     }
+
 
     /**
      * Used by the Database object to close a connection to a mysql
@@ -62,9 +66,11 @@ class Database {
      *
      * @return void
      */
-    private function close() {
+    private function close()
+    {
         $this->connection = null;
     }
+
 
     /**
      * Query the database, get the result, and return it.
@@ -79,14 +85,17 @@ class Database {
      * @return array|False Returns an array or multi-dimensional array
      * if successful and False if not.
      */
-    public function query($sql, $fetch_mode=PDO::FETCH_ASSOC) {
+    public function query($sql, $fetch_mode=PDO::FETCH_ASSOC)
+    {
         $this->connect();
         $result = $this->connection->query($sql, $fetch_mode);
         $this->close();
         return $result;
     }
 
-    public function select($sql) {
+
+    public function select($sql)
+    {
         $result = array();
         $raw_result = $this->query($sql)->fetchAll();
         foreach ($raw_result as $row) {
@@ -95,7 +104,9 @@ class Database {
         return $result;
     }
 
-    public function insert($sql) {
+
+    public function insert($sql)
+    {
         $result = 0;
         $this->connect();
         if ($r = $this->connection->query($sql)) {
@@ -105,13 +116,15 @@ class Database {
         $this->close();
     }
 
+
     /** 
      * Sets the value of the $tables property to an array containing the
      * tables in the configured mysql database.
      *
      * @return void
      */
-    private function set_tables() {
+    private function set_tables()
+    {
         $raw_query = $this->select('SHOW TABLES');
         $result = array();
         foreach ($raw_query as $row) {
@@ -122,12 +135,14 @@ class Database {
         $this->tables = $result;
     }
 
+
     /**
      * Get the value stored at $tables.
      *
      * @return array Containing the tables in the connected database.
      */
-    public function get_tables() {
+    public function get_tables()
+    {
         if (!$this->tables) {
             try {
                 $this->set_tables();
@@ -140,6 +155,7 @@ class Database {
         return $this->tables;
     }
 
+
     /** 
      * Gets the attributes of a either a given database table.
      *
@@ -147,7 +163,8 @@ class Database {
      *
      * @return array|null The attributes of the $table supplied
      */
-    public function get_table_attribs($table) {
+    public function get_table_attribs($table)
+    {
         $raw_result = $this->select("DESCRIBE $table");
         $result = array();
         foreach ($raw_result as $row) {
@@ -155,6 +172,7 @@ class Database {
         }
         return $result;
     }
+
 
     /**
      * Add an authorized user to the 'users' table.
@@ -165,7 +183,8 @@ class Database {
      * @param type $salt - uniq string stored in database
      * @param type $hashed_salted_password - hashed password with salt added
      */
-    public function add_authorized_user($username, $salt, $salted_password){
+    public function add_authorized_user($username, $salt, $salted_password)
+    {
         $query = 'INSERT INTO users (username, salt, salted_password) ' .
             "VALUES ('$username', '$salt', '$hashed_salted_password')";
         
