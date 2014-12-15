@@ -17,4 +17,7 @@ An incomplete guide to [using chameleon](https://lakonacomputers.com/owncloud/pu
 https://lakonacomputers.com/owncloud/public.php?service=files&t=f31cd6e35cce38eb138de2e4975c5d6e.
 
 @author Jason Favrod <lakona808@gmail.com>
+
 @version 0.2
+
+*Chameleon is currently under pre-release development. Version 1.0 coming soon!.*
