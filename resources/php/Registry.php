@@ -32,4 +32,14 @@ class Registry {
         }
         return $_string;
     }
+
+    public function toHtml() {
+        $_html = "<table class=\"php-obj-table\">\n";
+        $_html .= "\t<tr><th>Name</th><th>Type</th></tr>\n";
+        foreach(self::$_store as $name => $object) {
+            $_html .= "\t<tr><td>$name</td><td>".get_class($object)."</td></tr>\n";
+        }
+        $_html .= "</table>\n";
+        return $_html;
+    }
 }

@@ -14,13 +14,15 @@ error_reporting(E_ERROR | E_PARSE | E_WARNING);
 #(E_ERROR | E_PARSE | E_WARNING)
 
 
-// Setup some constant paths.
+// Setup some constants.
 define('APP_ROOT', __DIR__);
 define('PHP_DIR', __DIR__.'/resources/php');
 define('IMG_DIR', '/resources/images');
+define('SITE_TITLE', '');
 
 
 // MySQL settings
+define('DB_DRIVER', 'mysql');   # Sets driver used by Database.php.
 define('DB_NAME', '');   # The name of the database.
 define('DB_USER', '');   # The MySQL database username.
 define('DB_PASS', '');   # Password for the database user.
@@ -44,6 +46,7 @@ $nav_config = [
     'nav_root' => 'pages',
     'files' => true,
     'dirs' => false,
+    'default_page' => 'default.php',
     'ignore' => ['404.php', 'post.php', 'test.php'],
     'ignore_files_by_ext' => ['.swp'],
     'custom_html' => null

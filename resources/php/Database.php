@@ -5,12 +5,7 @@
  *
  * This Database class requires that the hostname (DB_HOST), username
  * (BD_USER), password (DB_PASS), and database name (BD_NAME) be
- * defined constants. The Database object can be instantiated with or
- * without a [mysql database] table selected. If a table is passed as
- * an argument at time of instantiation, or later with the
- * set_selected_table() method, the Database object will use the
- * selected_table in subsequent Database method calls that have a
- * $table parameter.
+ * defined constants.
  *
  *       NOTE:
  *       Database column headers referred to as attributes
@@ -23,8 +18,8 @@
  *       -------------------
  */
 
-class Database {
-
+class Database
+{
     /**
      * @var object(mysqli) $connection "An object which represents the
      * connection to a MySQL Server."
@@ -38,41 +33,12 @@ class Database {
      */
     private $tables = null;
 
-    /**
-     * @var string $selected_table A mysql database table, used as a
-     * default to all method calls that define a $table parameter.
-     */
-    private $selected_table = null;
 
     /**
-     * @var array $table_attrib Stores table attributes obtained from a
-     * DESCRIBE mysql query to a database.
+     * Constructor.
      */
-    private $table_attribs = null;
+    //public function __construct() {}
 
-    /**
-     * Constructor sets the value of tables property and optionally the
-     * selected_table property.
-     * 
-     * If the constructor is given a valid $table argument at time of
-     * instanciation the argument becomes the $selected_table, and will
-     * be used by default in methods that define a $table paramater.
-     * Else, the $selected_table property is unchanged (initially a
-     * null value) and method calls with a $table parameter will
-     * require a valid $table argument to be passed.
-     *
-     * @param string|null $table Set to null by default, optionally the
-     * name of a database table to be used in subsequent calls to the
-     * database.
-     *
-     * @return void
-     */
-    public function __construct($table=null) {
-        $this->set_tables();
-        if ($table) {
-            $this->set_selected_table($table);
-        }
-    }
 
     /**
      * Used by this Database object to create a connection to a mysql
@@ -80,13 +46,16 @@ class Database {
      *
      * @return void
      */
-    private function connect() {
-        $this->connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    private function connect()
+    {
+        $this->connection = new PDO(DB_DRIVER.':host='.DB_HOST.';dbname='.DB_NAME,
+            DB_USER, DB_PASS);
         if ($this->connection->connect_error) {
-            throw new Exception(__METHOD__ . ', mysqli Connection Error.'.
+            throw new Exception(__METHOD__ . ', Database Connection Error.'.
                 'Check defined DB_ constants.');
         }
     }
+
 
     /**
      * Used by the Database object to close a connection to a mysql
@@ -97,144 +66,17 @@ class Database {
      *
      * @return void
      */
-    private function close() {
-        $this->connection->close();
+    private function close()
+    {
         $this->connection = null;
     }
 
-    /** 
-     * Sets the value of the $tables property to an array containing the
-     * tables in the configured mysql database.
-     *
-     * @return void
-     */
-    private function set_tables() {
-        $this->connect();
-        $result = $this->connection->query("SHOW TABLES");
-        $this->close(); 
-        $tables = [];
-
-        if ($result) {
-            while ($row = $result->fetch_array()) {
-                $tables[] = $row[0];
-            }
-            $this->tables = $tables;
-        }
-        else {
-            throw new Exception(__METHOD__.' (line '.__LINE__.') '.
-                'mysqli query failed');
-        }
-    }
-
-    /**
-     * Get the value stored at $tables.
-     *
-     * @return array Containing the tables in the connected database.
-     */
-    public function get_tables() {
-        return $this->tables;
-    }
-
-    /** 
-     * Sets the value of the selected_table property.
-     *
-     * @param string $table The mysql database table that will be used
-     * as the default argument for the $table parameter in methods
-     * where it is defined.
-     *
-     * @return void
-     */
-    private function set_selected_table($table) {
-        if (in_array($table, $this->tables)) {
-            $this->selected_table = $table;
-        }
-        else {
-            throw new Exception(__METHOD__ . ', $table argument ' .
-                'not a valid database table.');
-        } 
-    }
-
-    /** 
-     * Get the stored value of the $selected_table property.
-     *
-     * If selected table has been set, returns the string stored as
-     * $selected_table, else returns null.
-     * @return string|null
-     */
-    public function get_selected_table() {
-        return $this->selected_table?
-            $this->selected_table : 'No table selected';
-    }
-
-    /** 
-     * Gets the attributes of a either a given database table or the
-     * stored $selected_table.
-     *
-     * @param string|null $table If $table argument is given, will get
-     * attributes for the table supplied, else the attributes for the
-     * table stored as the $selected_table property.
-     *
-     * @return array|null The attributes of either the $table supplied
-     * as an argument or of the stored $selected_table.
-     *
-     * @todo: should I throw an exception if $table_attribs is falsey.
-     */
-    public function get_table_attribs($table=null) {
-        if (!$table) {
-            if ($this->selected_table) {
-                $table = $this->selected_table;
-            }
-            else {
-                throw new Exception(__METHOD__ .' No valid $table argument or'.
-                    ' $selected_table property.');
-            }
-        }
-        return $this->table_attribs;
-    }
-
-    /** 
-     * Sets value of table_attribs property.
-     *
-     * When called queries the database for the attributes of the
-     * $selected_table, or of the $table argument (if supplied).
-     * The result is an associtive array that is stored in the
-     * $table_attribs property.
-     *
-     * @todo Handle this exception
-     * If $selected table is not set and $table is null, print a warning
-     * and return.
-     * @todo Should this privte function make the table param optional?
-     *
-     * @param string|null $table A mysql database table used whose
-     * attributes will be used to set the $table_attribs property. Uses
-     * the $selected_table property by default.
-     *
-     * @return void
-     */
-    private function set_table_attribs($table=null) {
-        if (!$table) {
-            if (!$this->selected_table) {
-                return null;
-            }
-            $table = $this->selected_table;
-        }
-
-        $this->connect();
-        $result = $this->connection->query("DESCRIBE $table");
-        $this->close();
-
-        $attribs = [];
-        while ($rows = $result->fetch_assoc()) {
-            $attribs[] = $rows['Field'];
-        }
-        $this->table_attribs = $attribs;
-    }
 
     /**
      * Query the database, get the result, and return it.
      * If a query result has one row, an assocative array containing
      * the result will be returned, if the result has many rows, a
-     * mulit-dimensional array associative will be returned.
+     * mulit-dimensional associative array will be returned.
      *
      * True if successfull; False if the query fails.
      *
@@ -243,23 +85,94 @@ class Database {
      * @return array|False Returns an array or multi-dimensional array
      * if successful and False if not.
      */
-    public function query($query) {
+    public function query($sql, $fetch_mode=PDO::FETCH_ASSOC)
+    {
         $this->connect();
-        $result = $this->connection->query($query);
+        $result = $this->connection->query($sql, $fetch_mode);
         $this->close();
-
-        if ($result->num_rows > 1) {
-            $all_entries = [];
-            while ($row = $result->fetch_assoc()) {
-                array_push($all_entries, $row);
-            }
-            $result = $all_entries;
-        } elseif ($result->num_rows === 1) {
-            $result = $result->fetch_assoc();
-        }
-
         return $result;
     }
+
+
+    public function select($sql)
+    {
+        $result = array();
+        $raw_result = $this->query($sql)->fetchAll();
+        foreach ($raw_result as $row) {
+            array_push($result, $row);
+        }
+        return $result;
+    }
+
+
+    public function insert($sql)
+    {
+        $result = 0;
+        $this->connect();
+        if ($r = $this->connection->query($sql)) {
+            $result = $r->rowCount();
+        }
+        return $result;
+        $this->close();
+    }
+
+
+    /** 
+     * Sets the value of the $tables property to an array containing the
+     * tables in the configured mysql database.
+     *
+     * @return void
+     */
+    private function set_tables()
+    {
+        $raw_query = $this->select('SHOW TABLES');
+        $result = array();
+        foreach ($raw_query as $row) {
+            foreach ($row as $table) {
+                array_push($result, $table);
+            }
+        } 
+        $this->tables = $result;
+    }
+
+
+    /**
+     * Get the value stored at $tables.
+     *
+     * @return array Containing the tables in the connected database.
+     */
+    public function get_tables()
+    {
+        if (!$this->tables) {
+            try {
+                $this->set_tables();
+            }
+            catch(Exception $e) {
+                error_log($e);
+                print '<p>Could not get tables.</p>';
+            }
+        }
+        return $this->tables;
+    }
+
+
+    /** 
+     * Gets the attributes of a either a given database table.
+     *
+     * @param string $table The database table whose attribute will be returned.
+     *
+     * @return array|null The attributes of the $table supplied
+     */
+    public function get_table_attribs($table)
+    {
+        $raw_result = $this->select("DESCRIBE $table");
+        $result = array();
+        foreach ($raw_result as $row) {
+            array_push($result, $row['Field']);
+        }
+        return $result;
+    }
+
 
     /**
      * Add an authorized user to the 'users' table.
@@ -270,12 +183,12 @@ class Database {
      * @param type $salt - uniq string stored in database
      * @param type $hashed_salted_password - hashed password with salt added
      */
-    public function add_authorized_user($username, $salt, $salted_password){
+    public function add_authorized_user($username, $salt, $salted_password)
+    {
         $query = 'INSERT INTO users (username, salt, salted_password) ' .
             "VALUES ('$username', '$salt', '$hashed_salted_password')";
         
         $insert_user_query = $this->query($query);
         
-        return $insert_user_query;
     }
 }

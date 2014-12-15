@@ -8,14 +8,13 @@ require_once('controller.php');
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+  <title><?php echo SITE_TITLE; ?></title>
 
-  <script src="config.js"></script>
-  <script src="resources/js/utils.js"></script>
+  <!--<script src=""></script>-->
 
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="resources/css/layout.css">
-  <link rel="stylesheet" href="resources/css/formatting.css">
+  <link rel="stylesheet" href="<?php echo CSS_DIR; ?>/layout.css">
+  <link rel="stylesheet" href="<?php echo CSS_DIR; ?>/formatting.css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,7 +24,9 @@ require_once('controller.php');
   <![endif]-->
 </head>
 <body>
-
+<?php
+get_page_from_uri();
+?>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </body>
