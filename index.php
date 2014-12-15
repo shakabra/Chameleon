@@ -13,8 +13,8 @@ require_once('controller.php');
   <!--<script src=""></script>-->
 
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="resources/css/layout.css">
-  <link rel="stylesheet" href="resources/css/formatting.css">
+  <link rel="stylesheet" href="<?php echo CSS_DIR; ?>/layout.css">
+  <link rel="stylesheet" href="<?php echo CSS_DIR; ?>/formatting.css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
