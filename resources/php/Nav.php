@@ -24,25 +24,22 @@
 class Nav {
 
     /**
-     * default_page
-     *
-     * The file name of the page you want displayed by default.
+     * @property string $default_page The file name of the page to be
+     * displayed by default.
      */
 
-    private $default_page = 0;
+    private $default_page = '';
 
     /**
-     * nav_root
-     *
-     * @property string $nav_root The root directory of where navigation
-     *                            will be created for.
+     * @property string $nav_root The root directory of where
+     * navigation will be created for.
      */
 
-    private $nav_root  = 0;
+    private $nav_root  = '';
 
     /**
-     * @property array $nav_point Stores strings representing items in the
-     *                            $nav_root that will become html navigation.
+     * @property array $nav_point Stores strings representing items in
+     * the $nav_root that will become html navigation.
      */
 
     private $nav_point = [];
@@ -141,7 +138,7 @@ class Nav {
      *
      */
 
-    private function get_files(&$dir, &$_array)
+    private function get_files($dir, &$_array)
     {
         $num_files = 0;
 
@@ -164,7 +161,7 @@ class Nav {
      *
      */
 
-    private function get_dirs(&$dir, &$_array)
+    private function get_dirs($dir, &$_array)
     {
         $num_dirs = 0;
 
@@ -214,7 +211,7 @@ class Nav {
      * @return int $num_unset
      */
 
-    private function unset_by_list(&$unset_list, &$_array)
+    private function unset_by_list($unset_list, &$_array)
     {
         $num_unset = 0;
 
