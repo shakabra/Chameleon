@@ -16,9 +16,9 @@ error_reporting(E_ERROR | E_PARSE | E_WARNING);
 
 // Setup some constants.
 define('APP_ROOT', __DIR__);
-define('PHP_DIR', __DIR__.'/resources/php');
-define('CSS_DIR', __DIR__.'/resources/css');
-define('IMG_DIR', __DIR__.'/resources/images');
+define('PHP_DIR', '/resources/php');
+define('CSS_DIR', '/resources/css');
+define('IMG_DIR', '/resources/images');
 define('SITE_TITLE', '');
 
 
