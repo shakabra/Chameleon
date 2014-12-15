@@ -24,79 +24,185 @@
 class Nav {
 
     /**
+     * default_page
+     *
      * The file name of the page you want displayed by default.
      */
+
     private $default_page = 0;
 
-
     /**
+     * nav_root
+     *
      * @property string $nav_root The root directory of where navigation
      *                            will be created for.
      */
-    private $nav_root  = 0;
 
+    private $nav_root  = 0;
 
     /**
      * @property array $nav_point Stores strings representing items in the
      *                            $nav_root that will become html navigation.
      */
+
     private $nav_point = [];
 
 
-    public function __construct($config) {
-        try {
-            $this->check_config($config);
+    /**
+     *
+     */
+
+    public function __construct($config)
+    {
+
+        if ($this->check_config($config))
+        {
             $this->nav_root = $config['nav_root'];
-            !$config['default_page']?:$this->default_page = $config['default_page'];
-        }
-        catch (Exception $e) {
-            print("<pre><b>Navigation Error</b></pre>");
-        }
-
-        try {
             $raw_nav_point = scandir($this->nav_root);
-            $this->nav_point = $this->remove_hidden($raw_nav_point);
-        }
-        catch (ErrorException $e) {
-            return "Could not set initial nav_points";
-        }
 
-        try {
-            if ($config['files'] && !$config['dirs']) {
-                $this->nav_point = $this->get_files($this->nav_root, $this->nav_point);
+            if ($config['files']) {
+                $this->get_files($this->nav_root, $this->nav_point);
             }
-            if (!$config['files'] && $config['dirs']) {
-                $this->nav_point = $this->get_subdirs($this->nav_root, $this->nav_point);
-            }
-        }
-        catch (Exception $e) {
-            return "Could not determine if navigation should contain files or directories";
-        }
 
-        if (!empty($config['ignore'])) {
-            $this->remove_ignore($config['ignore']);
+            if ($config['dirs']) {
+                $this->get_subdirs($this->nav_root, $this->nav_point);
+            }
+
+            $this->remove_hidden($this->nav_point);
+            $this->unset_by_list($config['ignore'], $this->nav_point);
+
+            !$config['default_page'] ?  : $this->default_page = $config['default_page'];
+        }
+        else {
+            print("<pre><b>Nav error</b>: Nav config is invalid.</pre>");
         }
     }
 
 
     /**
-     * Takes an array of  directory contents and unsets any items in that array
-     * that begin with a '.' .
+     * Checks the $config array to make sure required items exist and
+     * are of the correct type (logs errors).
      *
-     * @param array $dir_contents The contents of a directory (from scandir
-     * function).
+     * @param array $config The configuration to be checked.
      *
-     * @return array The contents of the given (scandir) array with the hidden
-     * files unset.
+     * @returns bool $code True if passes configuration check, False
+     * otherwise.
+     *
      */
-    private function remove_hidden($dir_contents) {
+
+    private function check_config($config) {
+        $err = 0;
+        $code = bool;
+        $valid_item = ['nav_root'=>'dir', 'files'=>'bool', 'dirs'=>'bool'];
+
+        foreach ($valid_item as $item => $type)
+        {
+            if (!array_key_exists($item, $config)) {
+                $e = 'No '.$item.' in Nav config array';
+                print("<pre><b>Nav configuration error</b>: $e</pre>");
+                unset($valid_item[$item]);
+                $err++;
+            }
+        }
+
+        foreach ($valid_item as $item => $type) {
+            $e = '';
+
+            if ($type === 'dir')
+            {
+                if (!is_dir($config[$item])) {
+                    $e = $item.' not a valid directory.';
+                    $err++;
+                }
+            }
+            else if ($type === 'bool')
+            {
+                if (!is_bool($config[$item])) {
+                    $e = $item.' of wrong type, it is '.gettype($item).' should be '.$type;
+                    $err++;
+                }
+            }
+
+            if ($e != '') {
+                print("<pre><b>Nav configuration error</b>: $e</pre>");
+            }
+        }
+
+        $err === 0 ? $code = True : $code = False;
+        return $code;
+    }
+
+
+    /**
+     * Scans a given directory for files and pushes any to the given
+     * array.
+     *
+     * @return int $num_files The number of files found.
+     *
+     */
+
+    private function get_files(&$dir, &$_array)
+    {
+        $num_files = 0;
+
+        foreach (scandir($dir) as $file) {
+            if (is_file("$dir/$file")) {
+                array_push($_array, $file);
+                ++$num_files;
+            }
+        }
+
+        return $num_files;
+    }
+
+
+    /**
+     * Scans a given directory for directories and pushes any to the
+     * given array.
+     *
+     * @return int $num_files The number of files found.
+     *
+     */
+
+    private function get_dirs(&$dir, &$_array)
+    {
+        $num_dirs = 0;
+
+        foreach (scandir($dir) as $file) {
+            if (is_dir("$dir/$file")) {
+                array_push($_array, $file);
+                ++$num_dirs;
+            }
+        }
+
+        return $num_dirs;
+    }
+
+
+    /**
+     * Takes an array of  directory contents and unsets any items in
+     * that array that begin with a '.' .
+     *
+     * @param array $dir_contents The contents of a directory (from
+     * scandir function).
+     *
+     * @return int $num_unset The number of hidden files unset.
+     */
+
+    private function remove_hidden(&$dir_contents)
+    {
+        $num_unset = 0;
+
         for ($i = count($dir_contents)-1; $i >= 0; $i--) {
             if ($dir_contents[$i][0] == '.') {
                 unset($dir_contents[$i]);
+                ++$num_unset;
             }
         }
-        return $dir_contents;
+
+        return $num_unset;
     }
+
 
     /**
      * From an array of given files, remove those files from the
@@ -105,45 +211,30 @@ class Nav {
      * @param $ignore_list array Listing of the files to remove from the
      * $nav_points array.
      *
-     * @return void
+     * @return int $num_unset
      */
-    private function remove_ignore($ignore_list) {
-        foreach ($ignore_list as $item) {
-            unset($this->nav_point[array_search($item, $this->nav_point)]);
+
+    private function unset_by_list(&$unset_list, &$_array)
+    {
+        $num_unset = 0;
+
+        foreach ($unset_list as $item) {
+            unset($_array[array_search($item, $this->nav_point)]);
+            ++$num_unset;
         }
+
+        return $num_unset;
     }
 
-    /**
-     * Seprate out the files from the $nav_pts and return an array of the
-     * with only the files.
-     *
-     * @return array 
-     */
-    private function get_files($dir, $nav_pts) {
-        $file = [];
-        foreach ($nav_pts as $item) {
-            if (is_file("$dir/$item")) {
-                array_push($file, $item);
-            }
-        }
-        return $file;
-    }
 
-    private function get_subdirs($dir, $nav_pts) {
-        $subdir = [];
-        foreach ($nav_pts as $item) {
-            if (is_dir("$dir/$item")) {
-                array_push($subdir, $item);
-            }
-        }
-        return $subdir;
-    }
-
-    public function get_nav_points() {
+    public function get_nav_points()
+    {
         return $this->nav_point();
     }
 
-    public function __toString() {
+
+    public function __toString()
+    {
         $string = "[ ";
         foreach ($this->nav_point as $pt) {
             $string .= "(pt: $pt), ";
@@ -151,70 +242,27 @@ class Nav {
         return rtrim($string, ' ,') . ' ]';
     }
 
-    public function get_nav_root() {
+
+    public function get_nav_root()
+    {
         return $this->nav_root;
     }
 
-    public function get_default_page() {
+
+    public function get_default_page()
+    {
         return $this->default_page;
     }
 
+    
     /**
-     * Checks the $config array to make sure required items exist and are
-     * of the correct type. If the array is invalid, errors are logged and an
-     * Exception is thrown.
+     * Returns nav points as HTML list items (<li>).
      *
      * @param array $config The configuration to be checked.
      *
-     * @returns void
-     *
-     * @todo Make this error handling go away and do it better; let's make it
-     * useful: good feedback, easy and to find and fix the problem.
+     * @returns string $html HTML list items for each nav point.
      */
-    private function check_config($config) {
-        $err = 0;
 
-        if (!array_key_exists('nav_root', $config)) {
-            $e = new Exception("No 'nav_root' in Nav configuration");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if (!array_key_exists('files', $config)) {
-            $e = new Exception("No 'files' directive in Nav configuration");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if (!array_key_exists('dirs', $config)) {
-            $e = new Exception("No 'dirs' directive in Nav configuration");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if (!is_dir($config['nav_root'])) {
-            $e = new Exception("No 'nav_root' in Nav configuration");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if (!is_bool($config['files'])) {
-            $e = new Exception("The configuration directive 'files' is not a boolean value");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if (!is_bool($config['dirs'])) {
-            $e = new Exception("The configuration directive 'dirs' is not a boolean value");
-            error_log("Error in ".$e->getFile()." : Nav configuration error : ".$e->getMessage());
-            $err++;
-        }
-
-        if ($err > 0) {
-            throw new Exception("The configuration of Nav is invalid; see error.log");
-        }
-    }
-    
     public function toHtml() {
         $html = "";
         foreach ($this->nav_point as $pt) {
