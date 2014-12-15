@@ -18,8 +18,8 @@
  *       -------------------
  */
 
-class Database {
-
+class Database
+{
     /**
      * @var object(mysqli) $connection "An object which represents the
      * connection to a MySQL Server."
@@ -33,10 +33,12 @@ class Database {
      */
     private $tables = null;
 
+
     /**
      * Constructor.
      */
     //public function __construct() {}
+
 
     /**
      * Used by this Database object to create a connection to a mysql
@@ -44,13 +46,16 @@ class Database {
      *
      * @return void
      */
-    private function connect() {
-        $this->connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    private function connect()
+    {
+        $this->connection = new PDO(DB_DRIVER.':host='.DB_HOST.';dbname='.DB_NAME,
+            DB_USER, DB_PASS);
         if ($this->connection->connect_error) {
-            throw new Exception(__METHOD__ . ', mysqli Connection Error.'.
+            throw new Exception(__METHOD__ . ', Database Connection Error.'.
                 'Check defined DB_ constants.');
         }
     }
+
 
     /**
      * Used by the Database object to close a connection to a mysql
@@ -61,10 +66,56 @@ class Database {
      *
      * @return void
      */
-    private function close() {
-        $this->connection->close();
+    private function close()
+    {
         $this->connection = null;
     }
+
+
+    /**
+     * Query the database, get the result, and return it.
+     * If a query result has one row, an assocative array containing
+     * the result will be returned, if the result has many rows, a
+     * mulit-dimensional associative array will be returned.
+     *
+     * True if successfull; False if the query fails.
+     *
+     * @param string $query The query to send to the database.
+     *
+     * @return array|False Returns an array or multi-dimensional array
+     * if successful and False if not.
+     */
+    public function query($sql, $fetch_mode=PDO::FETCH_ASSOC)
+    {
+        $this->connect();
+        $result = $this->connection->query($sql, $fetch_mode);
+        $this->close();
+        return $result;
+    }
+
+
+    public function select($sql)
+    {
+        $result = array();
+        $raw_result = $this->query($sql)->fetchAll();
+        foreach ($raw_result as $row) {
+            array_push($result, $row);
+        }
+        return $result;
+    }
+
+
+    public function insert($sql)
+    {
+        $result = 0;
+        $this->connect();
+        if ($r = $this->connection->query($sql)) {
+            $result = $r->rowCount();
+        }
+        return $result;
+        $this->close();
+    }
+
 
     /** 
      * Sets the value of the $tables property to an array containing the
@@ -72,30 +123,35 @@ class Database {
      *
      * @return void
      */
-    private function set_tables() {
-        $this->connect();
-        $result = $this->connection->query("SHOW TABLES");
-        $this->close(); 
-        $tables = [];
-
-        if ($result) {
-            while ($row = $result->fetch_array()) {
-                $tables[] = $row[0];
+    private function set_tables()
+    {
+        $raw_query = $this->select('SHOW TABLES');
+        $result = array();
+        foreach ($raw_query as $row) {
+            foreach ($row as $table) {
+                array_push($result, $table);
             }
-            $this->tables = $tables;
-        }
-        else {
-            throw new Exception(__METHOD__.' (line '.__LINE__.') '.
-                'mysqli query failed');
-        }
+        } 
+        $this->tables = $result;
     }
+
 
     /**
      * Get the value stored at $tables.
      *
      * @return array Containing the tables in the connected database.
      */
-    public function get_tables() {
+    public function get_tables()
+    {
+        if (!$this->tables) {
+            try {
+                $this->set_tables();
+            }
+            catch(Exception $e) {
+                error_log($e);
+                print '<p>Could not get tables.</p>';
+            }
+        }
         return $this->tables;
     }
 
@@ -107,47 +163,16 @@ class Database {
      *
      * @return array|null The attributes of the $table supplied
      */
-    public function get_table_attribs($table) {
-        $this->connect();
-        $result = $this->connection->query("DESCRIBE $table");
-        $this->close();
-        $attribs = [];
-        while ($rows = $result->fetch_assoc()) {
-            array_push($attribs, $rows['Field']);
+    public function get_table_attribs($table)
+    {
+        $raw_result = $this->select("DESCRIBE $table");
+        $result = array();
+        foreach ($raw_result as $row) {
+            array_push($result, $row['Field']);
         }
-        return $attribs;
-    }
-
-    /**
-     * Query the database, get the result, and return it.
-     * If a query result has one row, an assocative array containing
-     * the result will be returned, if the result has many rows, a
-     * mulit-dimensional array associative will be returned.
-     *
-     * True if successfull; False if the query fails.
-     *
-     * @param string $query The query to send to the database.
-     *
-     * @return array|False Returns an array or multi-dimensional array
-     * if successful and False if not.
-     */
-    public function query($query) {
-        $this->connect();
-        $result = $this->connection->query($query);
-        $this->close();
-
-        if ($result->num_rows > 1) {
-            $all_entries = [];
-            while ($row = $result->fetch_assoc()) {
-                array_push($all_entries, $row);
-            }
-            $result = $all_entries;
-        } elseif ($result->num_rows === 1) {
-            $result = $result->fetch_assoc();
-        }
-
         return $result;
     }
+
 
     /**
      * Add an authorized user to the 'users' table.
@@ -158,12 +183,12 @@ class Database {
      * @param type $salt - uniq string stored in database
      * @param type $hashed_salted_password - hashed password with salt added
      */
-    public function add_authorized_user($username, $salt, $salted_password){
+    public function add_authorized_user($username, $salt, $salted_password)
+    {
         $query = 'INSERT INTO users (username, salt, salted_password) ' .
             "VALUES ('$username', '$salt', '$hashed_salted_password')";
         
         $insert_user_query = $this->query($query);
         
-        return $insert_user_query;
     }
 }

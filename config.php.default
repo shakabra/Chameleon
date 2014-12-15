@@ -22,6 +22,7 @@ define('SITE_TITLE', '');
 
 
 // MySQL settings
+define('DB_DRIVER', 'mysql');   # Sets driver used by Database.php.
 define('DB_NAME', '');   # The name of the database.
 define('DB_USER', '');   # The MySQL database username.
 define('DB_PASS', '');   # Password for the database user.
