@@ -3,6 +3,8 @@ Chameleon
 
 A simple MVC style Web application framework utilizing the [Bootstrap](http://getbootstrap.com/) frontend framework from Twitter, Inc.
 
+*Chameleon is currently under pre-release development. Version 1.0 coming soon!.*
+
 The base files are `config.php`, `index.php` and `controller.php`.
 `config.php` is where we store the site's configuration details.
 The `index.php` provides the site's overall html template.
@@ -17,4 +19,5 @@ An incomplete guide to [using chameleon](https://lakonacomputers.com/owncloud/pu
 https://lakonacomputers.com/owncloud/public.php?service=files&t=f31cd6e35cce38eb138de2e4975c5d6e.
 
 @author Jason Favrod <lakona808@gmail.com>
+
 @version 0.2
