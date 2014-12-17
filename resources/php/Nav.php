@@ -1,9 +1,8 @@
 <?php
 /**
  * Creates a new Nav object that can be used for Web site navigation.
- *
- * @param array $config Required and optional key => value pairs used 
- * to create the Nav object.
+ * Constructor takes an array argument with the following required and
+ * optional keys.
  *
  *     Required Keys                Optional Keys
  *     --------------               --------------
@@ -12,13 +11,13 @@
  *     ['files'] => boolean
  *
  * * **nav_root**   The directory where navigation begins.
- * * **dirs**       Whether or not to have sub-directories of **nav_root**
+ * * **dirs**       Whether or not to have sub-directories of
+ *                  **nav_root**
  *                  as nav points.
- * * **files**      Whether or not to have files in **nav_root** as nav points.
- * * **ignore**     An array listing files and/or directories in **nav_root**
- *                  not to make into nav points.
- *
- * @author Jason Favrod
+ * * **files**      Whether or not to have files in **nav_root** as nav
+ *                  points.
+ * * **ignore**     An array listing files and/or directories in
+ *                  **nav_root** not to make into nav points.
  */
 
 class Nav {
@@ -46,12 +45,17 @@ class Nav {
 
 
     /**
+     * Issues a check of the config, and if valid sets values for a new
+     * Nav object. Prints an error if config is invalid.
      *
+     * @param array $config Required and optional key value pairs used
+     * to create the Nav object.
+     *
+     * @return void
      */
 
     public function __construct($config)
     {
-
         if ($this->check_config($config))
         {
             $this->nav_root = $config['nav_root'];
@@ -71,62 +75,72 @@ class Nav {
             !$config['default_page'] ?  : $this->default_page = $config['default_page'];
         }
         else {
-            print("<pre><b>Nav error</b>: Nav config is invalid.</pre>");
+            $this->print_error('Nav config is invalid.');
         }
     }
 
 
     /**
      * Checks the $config array to make sure required items exist and
-     * are of the correct type (logs errors).
+     * are of the correct type (prints errors).
      *
      * @param array $config The configuration to be checked.
      *
-     * @returns bool $code True if passes configuration check, False
-     * otherwise.
-     *
+     * @return bool $ If err === 0 True, otherwise False.
      */
 
     private function check_config($config) {
         $err = 0;
-        $code = bool;
         $valid_item = ['nav_root'=>'dir', 'files'=>'bool', 'dirs'=>'bool'];
 
         foreach ($valid_item as $item => $type)
         {
             if (!array_key_exists($item, $config)) {
-                $e = 'No '.$item.' in Nav config array';
-                print("<pre><b>Nav configuration error</b>: $e</pre>");
+                $this->print_error('No '.$item.' in Nav config array');
                 unset($valid_item[$item]);
                 $err++;
             }
         }
 
         foreach ($valid_item as $item => $type) {
-            $e = '';
-
             if ($type === 'dir')
             {
                 if (!is_dir($config[$item])) {
-                    $e = $item.' not a valid directory.';
+                    $this->print_error($item.' not a valid directory.');
                     $err++;
                 }
             }
             else if ($type === 'bool')
             {
                 if (!is_bool($config[$item])) {
-                    $e = $item.' of wrong type, it is '.gettype($item).' should be '.$type;
+                    $this->print_error($item.
+                        ' of wrong type, it is '.gettype($item).' should be '.$type);
                     $err++;
                 }
             }
-
-            if ($e != '') {
-                print("<pre><b>Nav configuration error</b>: $e</pre>");
-            }
         }
 
-        $err === 0 ? $code = True : $code = False;
-        return $code;
+        return $err === 0;
+    }
+
+
+    /**
+     * Prints a given error as a nav-error.
+     *
+     * @return int $num_files The number of files found.
+     */
+
+    private function print_error($error)
+    {
+        print <<<EOT
+        <div class="alert alert-danger alert-dismissible nav-error" role="alert">
+        <b>Nav error</b>:$error
+        <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+        </button>
+        </div>
+EOT;
     }
 
 
@@ -135,7 +149,6 @@ class Nav {
      * array.
      *
      * @return int $num_files The number of files found.
-     *
      */
 
     private function get_files($dir, &$_array)
