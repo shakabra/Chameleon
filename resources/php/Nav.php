@@ -19,8 +19,10 @@
  * * **ignore**     An array listing files and/or directories in
  *                  **nav_root** not to make into nav points.
  */
+require_once 'Chameleon.php';
 
-class Nav {
+
+class Nav extends Chameleon {
 
     /**
      * @property string $default_page The file name of the page to be
@@ -121,26 +123,6 @@ class Nav {
         }
 
         return $err === 0;
-    }
-
-
-    /**
-     * Prints a given error as a nav-error.
-     *
-     * @return int $num_files The number of files found.
-     */
-
-    private function print_error($error)
-    {
-        print <<<EOT
-        <div class="alert alert-danger alert-dismissible nav-error" role="alert">
-        <b>Nav error</b>:$error
-        <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-        <span class="sr-only">Close</span>
-        </button>
-        </div>
-EOT;
     }
 
 
