@@ -17,8 +17,10 @@
  *       | value  | value  |
  *       -------------------
  */
+require_once 'Chameleon.php';
 
-class Database
+
+class Database extends Chameleon
 {
     /**
      * @var object(mysqli) $connection "An object which represents the
@@ -51,8 +53,7 @@ class Database
         $this->connection = new PDO(DB_DRIVER.':host='.DB_HOST.';dbname='.DB_NAME,
             DB_USER, DB_PASS);
         if ($this->connection->connect_error) {
-            throw new Exception(__METHOD__ . ', Database Connection Error.'.
-                'Check defined DB_ constants.');
+            $this->print_error('Database connection error, check defined db constants.');
         }
     }
 
@@ -148,8 +149,8 @@ class Database
                 $this->set_tables();
             }
             catch(Exception $e) {
-                error_log($e);
-                print '<p>Could not get tables.</p>';
+                error_log(__METHOD__.' '.$e->getMessage().' '.$e->getCode());
+                $this->print_error('Could not get tables.');
             }
         }
         return $this->tables;
