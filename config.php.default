@@ -24,41 +24,46 @@ define('PAGES_DIR', APP_ROOT.'/pages');
 define('PHP_DIR', 'resources/php');
 define('SITE_TITLE', 'chameleon');
 
-
-// MySQL settings
-define('DB_DRIVER', 'mysql');   # Sets driver used by Database.php.
-define('DB_NAME', '');   # The name of the database.
-define('DB_USER', '');   # The MySQL database username.
-define('DB_PASS', '');   # Password for the database user.
-define('DB_HOST', '');   # The Host Address of the database.
-
-
 // Dates Formatting
 define('PUBDATE_FORMAT', 'M d, Y');
 date_default_timezone_set('UTC');
 
 
 /**
- * Site Navigation
- *
- *     Options for the Site Navigation:
- *     ------------------------------------
- *      nav_root => [path]
+ * MySQL settings
+ *      db_driver       Sets driver used by Database.php.
+ *      db_name         The name of the database.
+ *      db_user         The MySQL database username.
+ *      db_pass         Password for the database user.
+ */
+
+$db_config = [
+    'db_driver' => 'mysql', 
+    'db_name' => '', 
+    'db_user' => '',
+    'db_pass' => '',
+    'db_host' => ''
+];
+
+
+/**
+ * Navigation Configuration
+ *      nav_root
  *      Path to the directory with site's published content.
  *
- *      files => [true | false]
- *      To show files from nav_root in site's navigation.
+ *      files 
+ *      Boolean, to show files from nav_root in site's navigation.
  *
- *      dirs => [true | false]
- *      To show directories from nav_root in site's navigation.
+ *      dirs
+ *      Boolean, to show directories from nav_root in site's navigation.
  *
- *      'default_page' => 'default.php'
+ *      default_page
  *      The page to display by default.
  *
- *      'ignore' => ['404.php', 'default.php']
+ *      ignore
  *      Array of files/dirs to ignore in the navigation.
  *
- *      ignore_files_by_ext = ['.swp']
+ *      ignore_files_by_ext
  *      Array of file types by extension to ingore from nav_root.
  */
 
