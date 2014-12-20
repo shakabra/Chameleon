@@ -32,29 +32,46 @@ define('DB_USER', '');   # The MySQL database username.
 define('DB_PASS', '');   # Password for the database user.
 define('DB_HOST', '');   # The Host Address of the database.
 
+
 // Dates Formatting
 define('PUBDATE_FORMAT', 'M d, Y');
 date_default_timezone_set('UTC');
 
 
 /**
-/* Options for the Site Navigation:
-/* ------------------------------------
-/* nav_root => [path] To the site's published content.
-/* files => [true | false] Show files in site's navigation.
-/* dirs => [true | false] Show directories in the site's navigation
-/* discard_ext = ['.html', '.php']
-/* ignore_files_by_ext = ['.swp']
+ * Site Navigation
+ *
+ *     Options for the Site Navigation:
+ *     ------------------------------------
+ *      nav_root => [path]
+ *      Path to the directory with site's published content.
+ *
+ *      files => [true | false]
+ *      To show files from nav_root in site's navigation.
+ *
+ *      dirs => [true | false]
+ *      To show directories from nav_root in site's navigation.
+ *
+ *      'default_page' => 'default.php'
+ *      The page to display by default.
+ *
+ *      'ignore' => ['404.php', 'default.php']
+ *      Array of files/dirs to ignore in the navigation.
+ *
+ *      ignore_files_by_ext = ['.swp']
+ *      Array of file types by extension to ingore from nav_root.
  */
+
 $nav_config = [
     'nav_root' => 'pages',
     'files' => true,
     'dirs' => false,
     'default_page' => 'default.php',
-    'ignore' => ['404.php', 'post.php', 'test.php'],
+    'ignore' => ['404.php', 'default.php'],
     'ignore_files_by_ext' => ['.swp'],
     'custom_html' => null
 ];
+
 
 // Add shared objects to the Registry.
 Registry::add(new Database());
