@@ -7,7 +7,6 @@
  * (BD_USER), password (DB_PASS), and database name (BD_NAME) be
  * defined constants.
  *
- *       NOTE:
  *       Database column headers referred to as attributes
  *       Database row entries referred to as values
  *       e.g.:
@@ -22,6 +21,11 @@ require_once 'Chameleon.php';
 
 class Database extends Chameleon
 {
+    /**
+     * An array the contains the Database object's configuration.
+     */
+    private $config = [];
+
     /**
      * @var object(mysqli) $connection "An object which represents the
      * connection to a MySQL Server."
@@ -38,8 +42,44 @@ class Database extends Chameleon
 
     /**
      * Constructor.
+     *
+     * Validates the given configuration array, and if valid sets
+     * the config property.
      */
-    //public function __construct() {}
+
+    public function __construct($config)
+    {
+        if ($this->check_config($config)) {
+            $this->config = $config;
+        }
+        else {
+            $this->print_error('Invalid Database Configuration');
+        }
+    }
+
+
+    /**
+     * Checks the given configuration array for necessary values and
+     * return true if config is valid and false otherwise.
+     *
+     * @return bool True if no errors, fasle otherwise.
+     */
+
+    protected function check_config($config)
+    {
+        $err = [];
+        $config_keys =
+            ['db_driver', 'db_host', 'db_name', 'db_user', 'db_pass'];
+
+        foreach ($config_keys as $key)
+        {
+            if (!array_key_exists($key, $config)) {
+                $this->print_error("Config $key missing");
+            }
+        }
+
+        return empty($err);
+    }
 
 
     /**
@@ -48,12 +88,20 @@ class Database extends Chameleon
      *
      * @return void
      */
+
     private function connect()
     {
-        $this->connection = new PDO(DB_DRIVER.':host='.DB_HOST.';dbname='.DB_NAME,
-            DB_USER, DB_PASS);
-        if ($this->connection->connect_error) {
-            $this->print_error('Database connection error, check defined db constants.');
+        try {
+            $this->connection = new PDO(
+                $this->config['db_driver'].':host='.$this->config['db_host'].
+                ';dbname='.$this->config['db_name'],
+                $this->config['db_user'],
+                $this->config['db_pass']
+            );
+        }
+        catch (PDOException $pdo_e) {
+            error_log($pdo_e->getMessage());
+            $this->print_error('Connection error '.$pdo_e->getMessage());
         }
     }
 
