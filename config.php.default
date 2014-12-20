@@ -21,7 +21,7 @@ define('CSS_DIR', '/resources/css');
 define('IMG_DIR', '/resources/images');
 define('JS_DIR', '/resources/js');
 define('PAGES_DIR', APP_ROOT.'/pages');
-define('PHP_DIR', '/resources/php');
+define('PHP_DIR', 'resources/php');
 define('SITE_TITLE', 'chameleon');
 
 
