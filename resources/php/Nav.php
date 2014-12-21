@@ -25,13 +25,6 @@ require_once 'Chameleon.php';
 class Nav extends Chameleon {
 
     /**
-     * @property string $default_page The file name of the page to be
-     * displayed by default.
-     */
-
-    private $default_page = '';
-
-    /**
      * @property string $nav_root The root directory of where
      * navigation will be created for.
      */
@@ -73,8 +66,6 @@ class Nav extends Chameleon {
 
             $this->remove_hidden($this->nav_point);
             $this->unset_by_list($config['ignore'], $this->nav_point);
-
-            !$config['default_page'] ?  : $this->default_page = $config['default_page'];
         }
         else {
             $this->print_error('Nav config is invalid.');
@@ -241,12 +232,6 @@ class Nav extends Chameleon {
     }
 
 
-    public function get_default_page()
-    {
-        return $this->default_page;
-    }
-
-    
     /**
      * Returns nav points as HTML list items (<li>).
      *
