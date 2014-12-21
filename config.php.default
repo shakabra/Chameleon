@@ -57,9 +57,6 @@ $db_config = [
  *      dirs
  *      Boolean, to show directories from nav_root in site's navigation.
  *
- *      default_page
- *      The page to display by default.
- *
  *      ignore
  *      Array of files/dirs to ignore in the navigation.
  *
@@ -71,7 +68,6 @@ $nav_config = [
     'nav_root' => 'pages',
     'files' => true,
     'dirs' => false,
-    'default_page' => 'default.php',
     'ignore' => ['404.php', 'default.php'],
     'ignore_files_by_ext' => ['.swp'],
     'custom_html' => null
