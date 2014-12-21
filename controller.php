@@ -1,9 +1,6 @@
 <?php
 namespace app;
 
-require_once('config.php');
-
-use Registry;
 
 /**
  * Grabs the request URI, parses it, then includes on the page any
