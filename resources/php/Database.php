@@ -122,14 +122,11 @@ class Database extends Chameleon
 
 
     /**
-     * Query the database, get the result, and return it.
-     * If a query result has one row, an assocative array containing
-     * the result will be returned, if the result has many rows, a
-     * mulit-dimensional associative array will be returned.
+     * Query the database with $sql, get the result, and return it.
      *
-     * True if successfull; False if the query fails.
-     *
-     * @param string $query The query to send to the database.
+     * @param string $sql The query to send to the database.
+     * @param int $fetch_mode The way you want the query returned.
+     * The default is PDO::FETCH_ASSOC (See PDO Constants).
      *
      * @return array|False Returns an array or multi-dimensional array
      * if successful and False if not.
@@ -138,18 +135,33 @@ class Database extends Chameleon
     {
         $this->connect();
         $result = $this->connection->query($sql, $fetch_mode);
+        
+        if (! $result instanceof PDOStatement) {
+            $result = False;
+            $this->print_error("Query did not return PDOStatement");
+        }
+
         $this->close();
         return $result;
     }
 
 
+    /**
+     */
     public function select($sql)
     {
         $result = array();
-        $raw_result = $this->query($sql)->fetchAll();
-        foreach ($raw_result as $row) {
-            array_push($result, $row);
+        $raw_result = $this->query($sql);
+
+        if ($raw_result) {
+            foreach ($raw_result->fetchAll() as $row) {
+                array_push($result, $row);
+            }
         }
+        else {
+            $result = False;
+        }
+
         return $result;
     }
 
