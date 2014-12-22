@@ -11,6 +11,7 @@ namespace app;
 
 function include_page_from_uri() {
     $URI = ltrim(filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL), '/');
+    empty($_GET)) ? : $URI = strstr($URI, '?', true);
 
     if ($URI === '' && DEFAULT_PAGE){
         include(PAGES_DIR.'/'.DEFAULT_PAGE);
