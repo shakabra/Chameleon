@@ -4,6 +4,7 @@
  *
  * @todo maybe change the name of asso_array
  */
+
 class BlogPost
 {
     protected $id = null;

@@ -3,7 +3,8 @@
  * A class used to store data in an HTTP cookie
  */
 
-class Cookie {
+class Cookie
+{
     public $data;
 
     public function __construct($data) {

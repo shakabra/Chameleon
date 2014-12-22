@@ -5,7 +5,8 @@
  * @author Jason Favrod <lakona808@gmail.com>
  */
 
-class Registry {
+class Registry
+{
     private static $_store = array();
 
     public static function add($object, $name=null) {
