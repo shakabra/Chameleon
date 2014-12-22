@@ -7,7 +7,6 @@
  * (BD_USER), password (DB_PASS), and database name (BD_NAME) be
  * defined constants.
  *
- *       NOTE:
  *       Database column headers referred to as attributes
  *       Database row entries referred to as values
  *       e.g.:
@@ -17,9 +16,16 @@
  *       | value  | value  |
  *       -------------------
  */
+require_once 'Chameleon.php';
 
-class Database
+
+class Database extends Chameleon
 {
+    /**
+     * An array the contains the Database object's configuration.
+     */
+    private $config = [];
+
     /**
      * @var object(mysqli) $connection "An object which represents the
      * connection to a MySQL Server."
@@ -36,8 +42,44 @@ class Database
 
     /**
      * Constructor.
+     *
+     * Validates the given configuration array, and if valid sets
+     * the config property.
      */
-    //public function __construct() {}
+
+    public function __construct($config)
+    {
+        if ($this->check_config($config)) {
+            $this->config = $config;
+        }
+        else {
+            $this->print_error('Invalid Database Configuration');
+        }
+    }
+
+
+    /**
+     * Checks the given configuration array for necessary values and
+     * return true if config is valid and false otherwise.
+     *
+     * @return bool True if no errors, fasle otherwise.
+     */
+
+    protected function check_config($config)
+    {
+        $err = [];
+        $config_keys =
+            ['db_driver', 'db_host', 'db_name', 'db_user', 'db_pass'];
+
+        foreach ($config_keys as $key)
+        {
+            if (!array_key_exists($key, $config)) {
+                $this->print_error("Config $key missing");
+            }
+        }
+
+        return empty($err);
+    }
 
 
     /**
@@ -46,13 +88,20 @@ class Database
      *
      * @return void
      */
+
     private function connect()
     {
-        $this->connection = new PDO(DB_DRIVER.':host='.DB_HOST.';dbname='.DB_NAME,
-            DB_USER, DB_PASS);
-        if ($this->connection->connect_error) {
-            throw new Exception(__METHOD__ . ', Database Connection Error.'.
-                'Check defined DB_ constants.');
+        try {
+            $this->connection = new PDO(
+                $this->config['db_driver'].':host='.$this->config['db_host'].
+                ';dbname='.$this->config['db_name'],
+                $this->config['db_user'],
+                $this->config['db_pass']
+            );
+        }
+        catch (PDOException $pdo_e) {
+            error_log($pdo_e->getMessage());
+            $this->print_error('Connection error '.$pdo_e->getMessage());
         }
     }
 
@@ -73,14 +122,11 @@ class Database
 
 
     /**
-     * Query the database, get the result, and return it.
-     * If a query result has one row, an assocative array containing
-     * the result will be returned, if the result has many rows, a
-     * mulit-dimensional associative array will be returned.
+     * Query the database with $sql, get the result, and return it.
      *
-     * True if successfull; False if the query fails.
-     *
-     * @param string $query The query to send to the database.
+     * @param string $sql The query to send to the database.
+     * @param int $fetch_mode The way you want the query returned.
+     * The default is PDO::FETCH_ASSOC (See PDO Constants).
      *
      * @return array|False Returns an array or multi-dimensional array
      * if successful and False if not.
@@ -89,18 +135,33 @@ class Database
     {
         $this->connect();
         $result = $this->connection->query($sql, $fetch_mode);
+        
+        if (! $result instanceof PDOStatement) {
+            $result = False;
+            $this->print_error("Query did not return PDOStatement");
+        }
+
         $this->close();
         return $result;
     }
 
 
+    /**
+     */
     public function select($sql)
     {
         $result = array();
-        $raw_result = $this->query($sql)->fetchAll();
-        foreach ($raw_result as $row) {
-            array_push($result, $row);
+        $raw_result = $this->query($sql);
+
+        if ($raw_result) {
+            foreach ($raw_result->fetchAll() as $row) {
+                array_push($result, $row);
+            }
         }
+        else {
+            $result = False;
+        }
+
         return $result;
     }
 
@@ -148,8 +209,8 @@ class Database
                 $this->set_tables();
             }
             catch(Exception $e) {
-                error_log($e);
-                print '<p>Could not get tables.</p>';
+                error_log(__METHOD__.' '.$e->getMessage().' '.$e->getCode());
+                $this->print_error('Could not get tables.');
             }
         }
         return $this->tables;

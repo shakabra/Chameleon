@@ -1,5 +1,6 @@
 <?php
 namespace app;
+require_once('config.php'); 
 require_once('controller.php'); 
 ?>
 
@@ -25,7 +26,7 @@ require_once('controller.php');
 </head>
 <body>
 <?php
-get_page_from_uri();
+include_page_from_uri();
 ?>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>

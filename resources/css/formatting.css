@@ -1,3 +1,11 @@
-php-obj-table {
-width:250px;
+.php-obj-table {
+    width:250px;
+}
+
+.php-obj-table th {
+    border: 1px solid black;
+}
+
+.php-obj-table tr td {
+    border: 1px solid black;
 }

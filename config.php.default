@@ -16,17 +16,13 @@ error_reporting(E_ERROR | E_PARSE | E_WARNING);
 
 // Setup some constants.
 define('APP_ROOT', __DIR__);
-define('PHP_DIR', __DIR__.'/resources/php');
+define('DEFAULT_PAGE', 'default.php');
+define('CSS_DIR', '/resources/css');
 define('IMG_DIR', '/resources/images');
-define('SITE_TITLE', '');
-
-
-// MySQL settings
-define('DB_DRIVER', 'mysql');   # Sets driver used by Database.php.
-define('DB_NAME', '');   # The name of the database.
-define('DB_USER', '');   # The MySQL database username.
-define('DB_PASS', '');   # Password for the database user.
-define('DB_HOST', '');   # The Host Address of the database.
+define('JS_DIR', '/resources/js');
+define('PAGES_DIR', APP_ROOT.'/pages');
+define('PHP_DIR', 'resources/php');
+define('SITE_TITLE', 'chameleon');
 
 // Dates Formatting
 define('PUBDATE_FORMAT', 'M d, Y');
@@ -34,25 +30,50 @@ date_default_timezone_set('UTC');
 
 
 /**
-/* Options for the Site Navigation:
-/* ------------------------------------
-/* nav_root => [path] To the site's published content.
-/* files => [true | false] Show files in site's navigation.
-/* dirs => [true | false] Show directories in the site's navigation
-/* discard_ext = ['.html', '.php']
-/* ignore_files_by_ext = ['.swp']
+ * MySQL settings
+ *      db_driver       Sets driver used by Database.php.
+ *      db_name         The name of the database.
+ *      db_user         The MySQL database username.
+ *      db_pass         Password for the database user.
  */
+
+$db_config = [
+    'db_driver' => 'mysql', 
+    'db_name' => '', 
+    'db_user' => '',
+    'db_pass' => '',
+    'db_host' => ''
+];
+
+
+/**
+ * Navigation Configuration
+ *      nav_root
+ *      Path to the directory with site's published content.
+ *
+ *      files 
+ *      Boolean, to show files from nav_root in site's navigation.
+ *
+ *      dirs
+ *      Boolean, to show directories from nav_root in site's navigation.
+ *
+ *      ignore
+ *      Array of files/dirs to ignore in the navigation.
+ *
+ *      ignore_files_by_ext
+ *      Array of file types by extension to ingore from nav_root.
+ */
+
 $nav_config = [
     'nav_root' => 'pages',
     'files' => true,
     'dirs' => false,
-    'default_page' => 'default.php',
-    'ignore' => ['404.php', 'post.php', 'test.php'],
+    'ignore' => ['404.php', 'default.php'],
     'ignore_files_by_ext' => ['.swp'],
     'custom_html' => null
 ];
 
-// Create a Registry and ddd our shared objects.
-$Registry = new Registry();
-$Registry::add(new Database());
-$Registry::add(new Nav($nav_config));
+
+// Add shared objects to the Registry.
+Registry::add(new Database());
+Registry::add(new Nav($nav_config));
