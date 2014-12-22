@@ -123,6 +123,7 @@ class Database extends Chameleon
 
     /**
      * Query the database with $sql, get the result, and return it.
+     * Prints a warning if result is invalid.
      *
      * @param string $sql The query to send to the database.
      * @param int $fetch_mode The way you want the query returned.
@@ -138,7 +139,7 @@ class Database extends Chameleon
         
         if (! $result instanceof PDOStatement) {
             $result = False;
-            $this->print_error("Query did not return PDOStatement");
+            $this->print_warning("Query did not return PDOStatement");
         }
 
         $this->close();
