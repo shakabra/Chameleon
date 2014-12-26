@@ -75,5 +75,5 @@ $nav_config = [
 
 
 // Add shared objects to the Registry.
-Registry::add(new Database());
+Registry::add(new Database($db_config));
 Registry::add(new Nav($nav_config));
