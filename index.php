@@ -13,7 +13,7 @@ require_once('controller.php');
 
   <!--<script src=""></script>-->
 
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="<?php echo BOOTSTRAP_DIR; ?>/css/bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo CSS_DIR; ?>/layout.css">
   <link rel="stylesheet" href="<?php echo CSS_DIR; ?>/formatting.css">
 
@@ -29,6 +29,6 @@ require_once('controller.php');
 include_page_from_uri();
 ?>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="<?php echo BOOTSTRAP_DIR; ?>/js/bootstrap.min.js"></script>
 </body>
 </html>
