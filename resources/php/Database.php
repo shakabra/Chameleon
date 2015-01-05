@@ -197,6 +197,19 @@ class Database extends Chameleon
         $this->tables = $result;
     }
 
+    /**
+     * Provides a way to reflect upon which Database the PHP object is
+     * actually using.
+     *
+     * @return String The name of the Database (db_name in the config
+     * array).
+     */
+
+    public function get_name()
+    {
+        return $this->config['db_name'];
+    }
+
 
     /**
      * Get the value stored at $tables.
