@@ -24,20 +24,20 @@ class Database extends Chameleon
     /**
      * An array the contains the Database object's configuration.
      */
-    private $config = [];
+    protected $config = [];
 
     /**
      * @var object(mysqli) $connection "An object which represents the
      * connection to a MySQL Server."
      * -http://www.php.net/manual/en/mysqli.construct.php 
      */ 
-    private $connection = null;
+    protected $connection = null;
 
     /**
      * @var array $tables Stores the result set obtained from a
      * SHOW TABLES query against a database formatted into an array.
      */
-    private $tables = null;
+    protected $tables = null;
 
 
     /**
@@ -89,7 +89,7 @@ class Database extends Chameleon
      * @return void
      */
 
-    private function connect()
+    protected function connect()
     {
         try {
             $this->connection = new PDO(
@@ -115,7 +115,7 @@ class Database extends Chameleon
      *
      * @return void
      */
-    private function close()
+    protected function close()
     {
         $this->connection = null;
     }
@@ -185,7 +185,7 @@ class Database extends Chameleon
      *
      * @return void
      */
-    private function set_tables()
+    protected function set_tables()
     {
         $raw_query = $this->select('SHOW TABLES');
         $result = array();
