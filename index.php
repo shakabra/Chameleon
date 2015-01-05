@@ -25,10 +25,10 @@ require_once('controller.php');
   <![endif]-->
 </head>
 <body>
-<?php
-include_page_from_uri();
-?>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+  <?php include_page_from_uri(); ?>
+
+  <script src="<?php echo JS_DIR.'/jquery-1.11.2.min.js'; ?>"></script>
   <script src="<?php echo BOOTSTRAP_DIR; ?>/js/bootstrap.min.js"></script>
 </body>
 </html>
