@@ -234,23 +234,4 @@ class Database extends Chameleon
         }
         return $result;
     }
-
-
-    /**
-     * Add an authorized user to the 'users' table.
-     * @todo make the args a container type and a variable so one can
-     * vary the table to insert into.
-     * 
-     * @param type $username - username from the input form
-     * @param type $salt - uniq string stored in database
-     * @param type $hashed_salted_password - hashed password with salt added
-     */
-    public function add_authorized_user($username, $salt, $salted_password)
-    {
-        $query = 'INSERT INTO users (username, salt, salted_password) ' .
-            "VALUES ('$username', '$salt', '$hashed_salted_password')";
-        
-        $insert_user_query = $this->query($query);
-        
-    }
 }
