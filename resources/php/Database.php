@@ -115,6 +115,7 @@ class Database extends Chameleon
      *
      * @return void
      */
+
     protected function close()
     {
         $this->connection = null;
@@ -132,6 +133,7 @@ class Database extends Chameleon
      * @return array|False Returns an array or multi-dimensional array
      * if successful and False if not.
      */
+
     public function query($sql, $fetch_mode=PDO::FETCH_ASSOC)
     {
         $this->connect();
@@ -148,7 +150,14 @@ class Database extends Chameleon
 
 
     /**
+     * Perform a given sql SELECT query on a PDO/Database.
+     *
+     * @param String $sql The given SELECT query.
+     *
+     * @return Array|False Array containing the result if SELECT query
+     * succeeded, False otherwise.
      */
+
     public function select($sql)
     {
         $result = array();
@@ -166,6 +175,15 @@ class Database extends Chameleon
         return $result;
     }
 
+
+    /**
+     * Perform a given sql INSERT statement on a PDO/Database.
+     *
+     * @param String $sql The given INSERT statement.
+     *
+     * @return int Integer representing the number of rows resulting
+     * from the attempted INSERT query.
+     */
 
     public function insert($sql)
     {
@@ -185,6 +203,7 @@ class Database extends Chameleon
      *
      * @return void
      */
+
     protected function set_tables()
     {
         $raw_query = $this->select('SHOW TABLES');
@@ -216,6 +235,7 @@ class Database extends Chameleon
      *
      * @return array Containing the tables in the connected database.
      */
+
     public function get_tables()
     {
         if (!$this->tables) {
@@ -238,6 +258,7 @@ class Database extends Chameleon
      *
      * @return array|null The attributes of the $table supplied
      */
+
     public function get_table_attribs($table)
     {
         $raw_result = $this->select("DESCRIBE $table");
