@@ -13,7 +13,7 @@ require_once('controller.php');
 
   <body>
     <?php include_page_from_uri(); ?>
-    <?php get_required_scripts(); ?>
+    <?php print_required_scripts(); ?>
   </body>
 
 </html>

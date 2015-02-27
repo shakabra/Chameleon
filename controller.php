@@ -3,8 +3,8 @@ namespace app;
 
 
 /**
- * Grabs the request URI, parses it, then includes on the page any
- * requested page that is in the PAGES_DIR.
+ * Grabs the request URI, parses it, then includes any requested page
+ * that is in the PAGES_DIR.
  *
  * @return void
  */
@@ -58,7 +58,7 @@ function print_site_header()
  * Prints the script tags required for Chameleon/Bootstrap to function.
  */
 
-function get_required_scripts()
+function print_required_scripts()
 {
     print
     '<script src="'.JS_DIR.'/jquery-1.11.2.min.js"></script>
