@@ -12,8 +12,27 @@ var html = function (type, spec={}) {
     id = type + "-" + page[type+"_no"];
 
 
-  html_element["form"] = function () {
-    return "<form></form>";
+  html_element["h"] = function() { 
+    if (typeof spec === Object)
+        text = spec.text;
+    else
+        text = spec;
+
+    return "<" + type + " id=\"" + id + "\">" + text + "</" + type + ">";
+  }
+
+  html_element["h1"] = function() { return html_element["h"](); };
+  html_element["h2"] = function() { return html_element["h"](); };
+  html_element["h3"] = function() { return html_element["h"](); };
+  html_element["h4"] = function() { return html_element["h"](); };
+  html_element["h5"] = function() { return html_element["h"](); };
+  html_element["p"] = function() { return html_element["h"](); };
+
+
+  html_element["button"] = function() {
+    spec.hasOwnProperty("value") ? value = spec.value : value = "";
+
+    return "<button id=\"" + id + "\">" + value + "</button>";
   };
 
 
@@ -41,38 +60,6 @@ var html = function (type, spec={}) {
     return markup += "</table>";
   };
 
-
-  html_element["button"] = function() {
-    spec.hasOwnProperty("value") ? value = spec.value : value = "";
-
-    return "<button id=\"" + id + "\">" + value + "</button>";
-  };
-
-
-  html_element["p"] = function() {
-    if (typeof spec === Object)
-        text = spec.text;
-    else
-        text = spec;
-
-    return "<p id=\"" + id + "\">" + text + "</p>";
-  };
-
-
-  html_element["h"] = function() { 
-    if (typeof spec === Object)
-        text = spec.text;
-    else
-        text = spec;
-
-    return "<" + type + " id=\"" + id + "\">" + text + "</" + type + ">";
-  }
-
-  html_element["h1"] = function() { return html_element["h"](); };
-  html_element["h2"] = function() { return html_element["h"](); };
-  html_element["h3"] = function() { return html_element["h"](); };
-  html_element["h4"] = function() { return html_element["h"](); };
-  html_element["h5"] = function() { return html_element["h"](); };
 
   return html_element[type]();
 }
