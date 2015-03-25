@@ -4,6 +4,38 @@ class HTML
 {
     private static $element_count = [];
 
+
+    /**
+     * getID
+     *
+     * Generates a sequential HTML id based on the given type (of HTML
+     * element).
+     *
+     * @param   string &$type
+     * @return  stirng
+     */
+
+    private static function getID(&$type)
+    {
+        if (array_key_exists($type, self::$element_count)) ++self::$element_count[$type];
+        else                                               self::$element_count[$type] = 1;
+
+        return $type . "-" . self::$element_count[$type];
+    }
+
+
+    /**
+     * simpleElement
+     *
+     * Method used by h1-h5, p, etc. tags where specifiying attributes
+     * is optional.
+     *
+     * @param string|array &$spec
+     * @param string &$type = __method__ of calling function.
+     *
+     * @return string 
+     */
+
     public static function simpleElement (&$spec, &$type)
     {
         $text = '';
@@ -78,14 +110,5 @@ class HTML
         }
 
         return $markup .= "</table>\n";
-    }
-
-
-    private static function getID($type)
-    {
-        if (array_key_exists($type, self::$element_count)) ++self::$element_count[$type];
-        else                                               self::$element_count[$type] = 1;
-
-        return $type . "-" . self::$element_count[$type];
     }
 }
