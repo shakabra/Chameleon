@@ -11,16 +11,51 @@ class HTML
      * Generates a sequential HTML id based on the given type (of HTML
      * element).
      *
-     * @param   string &$type
+     * @param   string $type
      * @return  stirng
      */
 
-    private static function getID(&$type)
+    public static function getID(&$spec)
     {
-        if (array_key_exists($type, self::$element_count)) ++self::$element_count[$type];
-        else                                               self::$element_count[$type] = 1;
+        $id = '';
 
-        return $type . "-" . self::$element_count[$type];
+        if (array_key_exists('id', $spec))
+            $id = $spec['id'];
+        else
+            $id = self::createID($spec['type']);
+
+        return "id=\"$id\"";
+    }
+
+
+    /**
+     * createID
+     *
+     */
+
+    private static function createID($type)
+    {
+        if (array_key_exists($type, self::$element_count))
+            ++self::$element_count[$type];
+        else
+            self::$element_count[$type] = 1;
+
+        return $type.'-'.self::$element_count[$type];
+    }
+
+
+    /**
+     * getClass
+     */
+    
+    private static function getClass(&$spec)
+    {
+        $class = '';
+
+        if (array_key_exists('class', $spec))
+            $class = ' class="'.$spec['class'].'"';
+
+        return $class;
     }
 
 
@@ -38,20 +73,21 @@ class HTML
 
     public static function simpleElement (&$spec, &$type)
     {
+        $id   = '';
         $text = '';
         $type = ltrim($type, 'HTML::');
 
-        if (is_array($spec) && array_key_exists('id', $spec))
-            $id = $spec['id'];
-        else
-            $id = self::getID($type);
+        if (is_array($spec)) {
+            $id   = self::getID($spec);
+            $text = $spec['text'];
+        }
+        else if (is_string($spec)) {
+            $id   = 'id="'.self::createID($type).'"';
+            $text = $spec;
+        }
 
-        if      (is_array($spec))    $text = $spec["text"];
-        else if (is_string($spec))   $text = $spec;
-
-        return "<$type id=\"$id\">$text</$type>\n";
+        return '<'.$type.' '.$id.">$text</$type>\n";
     }
-
     public static function h1 ($spec=[], $type=__method__) {
         return self::simpleElement($spec, $type);
     }
@@ -83,11 +119,12 @@ class HTML
 
     public static function table($spec=[])
     {
-        if (array_key_exists('id', $spec)) $id = $spec['id'];
-        else                               $id = self::getID('table');
+        $markup       = '';
+        $spec['type'] = 'table';
+        $id           = self::getID($spec);
+        $class        = self::getClass($spec);
 
-        $markup = "<table id=\"$id\">\n";
-
+        $markup = "<table $id$class>";
         if (array_key_exists('cols', $spec))
         {
             $markup .= "\t<tr>";
