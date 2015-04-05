@@ -8,7 +8,47 @@ abstract class BStrapElement
     protected $id     = null;
     protected $class  = null;
 
+
+    /**
+     * construtor
+     *
+     * Sets specified container properties.
+     *
+     * @param array $spec Associative array with key value mappings of
+     * container properties.
+     */
     abstract public function __construct($spec=[]);
+
+
+    public function set_id($id)
+    {
+        $this->id = $id;
+    }
+
+
+    public function set_class($class)
+    {
+        $this->class = $class;
+    }
+
+
+    /**
+     * open_div_tag
+     *
+     * Forms an opening div tag for a Bootstrap CSS row.
+     *
+     * @return string An HTML markup of a Bootstrap CSS row.
+     */
+    abstract protected function opening_tag();
+
+
+    /**
+     * toHtml
+     *
+     * Generates the HTML of a Bootstrap CSS container.
+     *
+     * @return String HTML markup of a Bootstrap CSS container.
+     */
     abstract public function toHtml();
 }
 
@@ -19,15 +59,6 @@ class Container extends BStrapElement
     protected $row    = []; /* Used as a queue to load with bootstrap rows, */
                             /* and then unloaded onto a page.               */
 
-
-    /**
-     * construtor
-     *
-     * Sets specified container properties.
-     *
-     * @param array $spec Associative array with key value mappings of
-     * container properties.
-     */
 
     public function __construct($spec=[])
     {
@@ -40,18 +71,6 @@ class Container extends BStrapElement
             }
             $this->set_type($this->type);
         }
-    }
-
-
-    public function set_id($id)
-    {
-        $this->id = $id;
-    }
-
-
-    public function set_class($class)
-    {
-        $this->class = $class;
     }
 
 
@@ -94,15 +113,7 @@ class Container extends BStrapElement
     }
 
 
-    /**
-     * open_div_tag
-     *
-     * Forms an opening div tag for a Bootstrap CSS row.
-     *
-     * @return string An HTML markup of a Bootstrap CSS row.
-     */
-
-    protected function open_div_tag()
+    protected function opening_tag()
     {
         $html  = '<div ';
 
@@ -120,17 +131,9 @@ class Container extends BStrapElement
     }
 
 
-    /**
-     * toHtml
-     *
-     * Generates the HTML of a Bootstrap CSS container.
-     *
-     * @return String HTML markup of a Bootstrap CSS container.
-     */
-
     public function toHtml()
     {
-        $html  = $this->open_div_tag();
+        $html  = $this->opening_tag();
 
         $html .= '</div>';
         return $html;
@@ -145,6 +148,10 @@ class Row extends BStrapElement
         return;
     }
 
+    protected function opening_tag()
+    {
+        return;
+    }
 
     public function toHtml()
     {
