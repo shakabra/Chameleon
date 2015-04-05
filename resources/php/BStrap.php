@@ -22,7 +22,15 @@ class Container
 
     public function __construct($spec=[])
     {
-
+        if ($spec != [])
+        {
+            foreach ($spec as $property => $value) 
+            {
+                if (array_key_exists($property, get_class_vars("\BStrap\Container")))
+                    $this->$property = $value;
+            }
+            $this->set_type($this->type);
+        }
     }
 
 
@@ -42,6 +50,9 @@ class Container
     {
         if ($type == 'container') {
             $this->type = 'container';
+        }
+        else {
+            $this->type = 'container-fluid';
         }
     }
 
@@ -89,10 +100,10 @@ class Container
         if ($this->id != null)
           $html .= 'id="'.$this->id.'" ';
 
-        $html .= 'class="'.$this->container_type;
+        $html .= 'class="'.$this->type;
 
         if ($this->class != null)
-          $html .= $this->class.'">';
+          $html .= ' '.$this->class.'">';
         else
           $html .= '">';
 
