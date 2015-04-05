@@ -2,10 +2,19 @@
 namespace BStrap;
 require_once PHP_DIR.'/HTML.php';
 
-class Container
+
+abstract class BStrapElement
 {
     protected $id     = null;
     protected $class  = null;
+
+    abstract public function __construct($spec=[]);
+    abstract public function toHtml();
+}
+
+
+class Container extends BStrapElement
+{
     protected $type   = 'container-fluid';
     protected $row    = []; /* Used as a queue to load with bootstrap rows, */
                             /* and then unloaded onto a page.               */
@@ -26,7 +35,7 @@ class Container
         {
             foreach ($spec as $property => $value) 
             {
-                if (array_key_exists($property, get_class_vars("\BStrap\Container")))
+                if (array_key_exists($property, get_class_vars(__CLASS__)))
                     $this->$property = $value;
             }
             $this->set_type($this->type);
@@ -125,5 +134,20 @@ class Container
 
         $html .= '</div>';
         return $html;
+    }
+}
+
+
+class Row extends BStrapElement
+{
+    public function __construct($spec=[])
+    {
+        return;
+    }
+
+
+    public function toHtml()
+    {
+        return;
     }
 }
