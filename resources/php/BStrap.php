@@ -28,7 +28,6 @@ abstract class BStrapElement
                 if (array_key_exists($property, get_class_vars(__CLASS__)))
                     $this->$property = $value;
             }
-            $this->set_type($this->type);
         }
     }
 
