@@ -20,7 +20,7 @@ define('BOOTSTRAP_DIR', 'resources/bootstrap/3.3.1');
 define('DEFAULT_PAGE', 'default.php');
 define('CSS_DIR', '/resources/css');
 define('HTML_DIR', 'resources/html');
-define('IMG_DIR', '/resources/images');
+define('IMG_DIR', '/resources/img');
 define('JS_DIR', '/resources/js');
 define('PAGES_DIR', APP_ROOT.'/pages');
 define('PHP_DIR', 'resources/php');
