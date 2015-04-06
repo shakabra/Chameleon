@@ -106,6 +106,9 @@ class HTML
     public static function p ($spec=[], $type=__method__) {
         return self::simpleElement($spec, $type);
     }
+    public static function span ($spec=[], $type=__method__) {
+        return self::simpleElement($spec, $type);
+    }
 
 
     /**
