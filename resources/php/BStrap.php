@@ -5,6 +5,7 @@ require_once PHP_DIR.'/HTML.php';
 
 abstract class BStrapElement
 {
+    protected $tag   = null;
     protected $type  = null;
     protected $id    = null;
     protected $class = null;
@@ -54,7 +55,10 @@ abstract class BStrapElement
 
     protected function opening_tag()
     {
-        $html  = '<div ';
+        if ($this->tag == null)
+            $html  = '<div ';
+        else
+            $html  = '<'.$this->tag.' ';
 
         if ($this->id != null)
           $html .= 'id="'.$this->id.'" ';
@@ -69,6 +73,18 @@ abstract class BStrapElement
         return $html;
     }
 
+
+    protected function closing_tag()
+    {
+        $html = '';
+
+        if ($this->tag == null)
+            $html  = '</div>';
+        else
+            $html  = '</'.$this->tag.'>';
+
+        return $html;
+    }
 
     /**
      * toHtml
@@ -135,7 +151,7 @@ class Container extends BStrapElement
             $html .= $r->toHtml();
         }
 
-        $html .= '</div>';
+        $html .= $this->closing_tag();;
         return $html;
     }
 }
@@ -160,7 +176,7 @@ class Row extends BStrapElement
             $html .= $column->toHtml();
         }
             
-        $html .= '</div>';
+        $html .= $this->closing_tag();;
         return $html;
     }
 }
@@ -185,7 +201,7 @@ class Column extends BStrapElement
             $html .= $html_elem;
         }
 
-        $html .= '</div>';
+        $html .= $this->closing_tag();;
         return $html;
     }
 }
