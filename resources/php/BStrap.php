@@ -132,6 +132,10 @@ class Container extends BStrapElement
     {
         $html  = $this->opening_tag();
 
+        foreach ($this->row as $r) {
+            $html .= $r->toHtml();
+        }
+
         $html .= '</div>';
         return $html;
     }
@@ -144,9 +148,38 @@ class Row extends BStrapElement
     protected $col  = [];
 
 
+    public function add_col($col)
+    {
+        return array_push($this->col, $col);
+    }
+
     public function toHtml()
     {
         $html  = $this->opening_tag();
+
+        foreach ($this->col as $col) {
+            $html .= $col->toHtml();
+        }
+            
+        $html .= '</div>';
+        return $html;
+    }
+}
+
+
+class Column extends BStrapElement
+{
+    protected $type         = 'col-md-4';
+    protected $html_element = [];
+
+    public function toHtml()
+    {
+        $html  = $this->opening_tag();
+
+        foreach ($this->html_element as $html_elem) {
+            $html .= $html_elem;
+        }
+
         $html .= '</div>';
         return $html;
     }
