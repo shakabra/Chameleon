@@ -5,8 +5,9 @@ require_once PHP_DIR.'/HTML.php';
 
 abstract class BStrapElement
 {
-    protected $id     = null;
-    protected $class  = null;
+    protected $type  = null;
+    protected $id    = null;
+    protected $class = null;
 
 
     /**
@@ -17,7 +18,19 @@ abstract class BStrapElement
      * @param array $spec Associative array with key value mappings of
      * container properties.
      */
-    abstract public function __construct($spec=[]);
+
+    public function __construct($spec=[])
+    {
+        if ($spec != [])
+        {
+            foreach ($spec as $property => $value) 
+            {
+                if (array_key_exists($property, get_class_vars(__CLASS__)))
+                    $this->$property = $value;
+            }
+            $this->set_type($this->type);
+        }
+    }
 
 
     public function set_id($id)
@@ -39,7 +52,23 @@ abstract class BStrapElement
      *
      * @return string An HTML markup of a Bootstrap CSS row.
      */
-    abstract protected function opening_tag();
+
+    protected function opening_tag()
+    {
+        $html  = '<div ';
+
+        if ($this->id != null)
+          $html .= 'id="'.$this->id.'" ';
+
+        $html .= 'class="'.$this->type;
+
+        if ($this->class != null)
+          $html .= ' '.$this->class.'">';
+        else
+          $html .= '">';
+
+        return $html;
+    }
 
 
     /**
@@ -58,20 +87,6 @@ class Container extends BStrapElement
     protected $type   = 'container-fluid';
     protected $row    = []; /* Used as a queue to load with bootstrap rows, */
                             /* and then unloaded onto a page.               */
-
-
-    public function __construct($spec=[])
-    {
-        if ($spec != [])
-        {
-            foreach ($spec as $property => $value) 
-            {
-                if (array_key_exists($property, get_class_vars(__CLASS__)))
-                    $this->$property = $value;
-            }
-            $this->set_type($this->type);
-        }
-    }
 
 
     public function set_type($type)
@@ -113,24 +128,6 @@ class Container extends BStrapElement
     }
 
 
-    protected function opening_tag()
-    {
-        $html  = '<div ';
-
-        if ($this->id != null)
-          $html .= 'id="'.$this->id.'" ';
-
-        $html .= 'class="'.$this->type;
-
-        if ($this->class != null)
-          $html .= ' '.$this->class.'">';
-        else
-          $html .= '">';
-
-        return $html;
-    }
-
-
     public function toHtml()
     {
         $html  = $this->opening_tag();
@@ -143,18 +140,14 @@ class Container extends BStrapElement
 
 class Row extends BStrapElement
 {
-    public function __construct($spec=[])
-    {
-        return;
-    }
+    protected $type = 'row';
+    protected $col  = [];
 
-    protected function opening_tag()
-    {
-        return;
-    }
 
     public function toHtml()
     {
-        return;
+        $html  = $this->opening_tag();
+        $html .= '</div>';
+        return $html;
     }
 }
