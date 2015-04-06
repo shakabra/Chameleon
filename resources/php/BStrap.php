@@ -148,7 +148,7 @@ class Row extends BStrapElement
     protected $col  = [];
 
 
-    public function add_col($col)
+    public function add_column($col)
     {
         return array_push($this->col, $col);
     }
@@ -157,8 +157,8 @@ class Row extends BStrapElement
     {
         $html  = $this->opening_tag();
 
-        foreach ($this->col as $col) {
-            $html .= $col->toHtml();
+        foreach ($this->col as $column) {
+            $html .= $column->toHtml();
         }
             
         $html .= '</div>';
@@ -171,6 +171,12 @@ class Column extends BStrapElement
 {
     protected $type         = 'col-md-4';
     protected $html_element = [];
+
+
+    public function add_element($html_elem)
+    {
+        array_push($this->html_element, $html_elem);
+    }
 
     public function toHtml()
     {
