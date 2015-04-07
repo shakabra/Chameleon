@@ -34,16 +34,20 @@ function include_page_from_uri() {
 
 function print_site_header()
 {
-    print
-    '<meta charset="utf-8">
-    <meta charset="UTF-8">
+    print '
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>'.SITE_TITLE.'</title>
 
-    <!--<script src=""></script>-->
+    <script src="'.JS_DIR.'/jquery-1.11.2.min.js"></script>
+    <script src="'.JQUERY_UI_DIR.'/external/jquery/jquery.js"></script>
+    <script src="'.JQUERY_UI_DIR.'/jquery-ui.min.js"></script>
 
     <link rel="stylesheet" href="'.BOOTSTRAP_DIR.'/css/bootstrap.min.css">
     <link rel="stylesheet" href="'.CSS_DIR.'/layout.css">
@@ -54,7 +58,8 @@ function print_site_header()
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->';
+    <![endif]-->
+    ';
 }
 
 
@@ -64,7 +69,7 @@ function print_site_header()
 
 function print_required_scripts()
 {
-    print
-    '<script src="'.JS_DIR.'/jquery-1.11.2.min.js"></script>
-    <script src="'.BOOTSTRAP_DIR.'/js/bootstrap.min.js"></script>';
+    print '
+    <script src="'.BOOTSTRAP_DIR.'/js/bootstrap.min.js"></script>
+    ';
 }
