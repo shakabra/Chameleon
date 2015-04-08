@@ -2,60 +2,30 @@
 
 class HTML
 {
-    private static $element_count = [];
-
-
-    /**
-     * getID
-     *
-     * Generates a sequential HTML id based on the given type (of HTML
-     * element).
-     *
-     * @param   string $type
-     * @return  stirng
-     */
-
-    public static function getID(&$spec)
+    private static function generate_html(&$description)
     {
-        $id = '';
+        $spec    = $description['spec'];
+        $markup  = '<'.$description['tag'];
 
-        if (array_key_exists('id', $spec))
-            $id = $spec['id'];
-        else
-            $id = self::createID($spec['type']);
+        if (is_array($spec))
+        {
+            foreach ($spec as $spec_key => $spec_value)
+            {
+                if (in_array($spec_key, $description['attribs']))
+                    $markup .= ' '.$spec_key.'="'.$spec_value.'"';
+            }
+        }
 
-        return "id=\"$id\"";
-    }
+        $markup .= '>';
 
+        if(is_string($spec))
+            $markup .= $spec;
+        else if (array_key_exists('text', $spec))
+            $markup .= $spec['text'];
 
-    /**
-     * createID
-     *
-     */
+        $markup .= "</".$description['tag'].">\n";
 
-    private static function createID($type)
-    {
-        if (array_key_exists($type, self::$element_count))
-            ++self::$element_count[$type];
-        else
-            self::$element_count[$type] = 1;
-
-        return $type.'-'.self::$element_count[$type];
-    }
-
-
-    /**
-     * getClass
-     */
-    
-    private static function getClass(&$spec)
-    {
-        $class = '';
-
-        if (array_key_exists('class', $spec))
-            $class = ' class="'.$spec['class'].'"';
-
-        return $class;
+        return $markup;
     }
 
 
@@ -73,20 +43,11 @@ class HTML
 
     public static function simpleElement (&$spec, &$type)
     {
-        $id   = '';
-        $text = '';
-        $type = ltrim($type, 'HTML::');
+        $description = ['tag'     => ltrim($type, 'HTML::'),
+                        'attribs' => ['id', 'text'],
+                        'spec'    => $spec ];
 
-        if (is_array($spec)) {
-            $id   = self::getID($spec);
-            $text = $spec['text'];
-        }
-        else if (is_string($spec)) {
-            $id   = 'id="'.self::createID($type).'"';
-            $text = $spec;
-        }
-
-        return '<'.$type.' '.$id.">$text</$type>\n";
+        return self::generate_html($description);
     }
     public static function h1 ($spec=[], $type=__method__) {
         return self::simpleElement($spec, $type);
@@ -111,24 +72,43 @@ class HTML
     }
 
 
+    public static function label($spec=[])
+    {
+        $description = ['tag'     => 'label',
+                        'attribs' => ['id', 'for', 'text'],
+                        'spec'    => $spec ];
+
+        return self::generate_html($description);
+    }
+
+    public static function button($spec=[])
+    {
+        $description = ['tag'     => 'button',
+                        'attribs' => ['name', 'type', 'value'],
+                        'spec'    => $spec ];
+
+        return self::generate_html($description);
+    }
+
+
     public static function input ($spec=[])
     {
-        $markup  = '<input type="';
+        $description = ['tag'     => 'input',
+                        'attribs' => ['name', 'type', 'value', 'required',
+                                      'placeholder'],
+                        'spec'    => $spec ];
 
-        if (array_key_exists('type', $spec))
-            $markup .= $spec['type'].'"';
-        else
-            $markup .= 'text"';
-
-        if (array_key_exists('name', $spec))
-            $markup .= ' name="'.$spec['name'].'"';
+        return self::generate_html($description);
+    }
 
 
-        $markup .= '>';
+    public static function textarea($spec=[])
+    {
+        $description = ['tag'     => 'textarea',
+                        'attribs' => ['rows', 'cols'],
+                        'spec'    => $spec ];
 
-        $markup .= '</input>';
-
-        return $markup;
+        return self::generate_html($description);
     }
 
 
@@ -178,8 +158,8 @@ class HTML
     {
         $markup       = '';
         $spec['type'] = 'table';
-        $id           = self::getID($spec);
-        $class        = self::getClass($spec);
+        $id           = $spec['id'];
+        $class        = $spec['class'];
 
         $markup = "<table $id$class>";
         if (array_key_exists('cols', $spec))
