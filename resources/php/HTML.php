@@ -111,6 +111,60 @@ class HTML
     }
 
 
+    public static function input ($spec=[])
+    {
+        $markup  = '<input type="';
+
+        if (array_key_exists('type', $spec))
+            $markup .= $spec['type'].'"';
+        else
+            $markup .= 'text"';
+
+        if (array_key_exists('name', $spec))
+            $markup .= ' name="'.$spec['name'].'"';
+
+
+        $markup .= '>';
+
+        $markup .= '</input>';
+
+        return $markup;
+    }
+
+
+    private static function container_type(&$spec, $type)
+    {
+        $markup  = "<$type";
+        
+        if (array_key_exists('id', $spec))
+            $markup .= ' id="'.$spec['id'].'"';
+        
+        if (array_key_exists('class', $spec))
+            $markup .= ' class="'.$spec['class'].'"';
+
+        $markup .= '>';
+
+        if (array_key_exists('elements', $spec))
+            if (is_array($spec['elements']))
+                foreach ($spec['elements'] as $element) $markup .= $element;
+            else
+                $markup .= $spec['elements'];
+
+
+        $markup .= "</$type>";
+
+        return $markup;
+    }
+    public static function div($spec=[]) {
+        return self::container_type($spec, 'div');
+
+    }
+    public static function form($spec=[]) {
+        return self::container_type($spec, 'form');
+    }
+
+
+
     /**
      * table
      *
