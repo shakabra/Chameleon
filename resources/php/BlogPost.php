@@ -193,3 +193,4 @@ class BlogPost
         return $this->category;
     }
 }
+

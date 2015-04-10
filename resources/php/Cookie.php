@@ -15,3 +15,4 @@ class Cookie
         return (string)$this->data;
     }
 }
+
