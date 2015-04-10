@@ -22,7 +22,8 @@
 require_once 'Chameleon.php';
 
 
-class Nav extends Chameleon {
+class Nav extends Chameleon
+{
 
     /**
      * @property string $nav_root The root directory of where
@@ -51,25 +52,21 @@ class Nav extends Chameleon {
 
     public function __construct($config)
     {
-        if ($this->check_config($config))
-        {
+        if ($this->checkConfig($config)) {
             $this->nav_root = $config['nav_root'];
             $raw_nav_point = scandir($this->nav_root);
 
-            if ($config['files']) {
-                $this->get_files($this->nav_root, $this->nav_point);
-            }
+            if ($config['files'])
+                $this->getFiles($this->nav_root, $this->nav_point);
 
-            if ($config['dirs']) {
+            if ($config['dirs'])
                 $this->get_subdirs($this->nav_root, $this->nav_point);
-            }
 
-            $this->remove_hidden($this->nav_point);
-            $this->unset_by_list($config['ignore'], $this->nav_point);
+            $this->removeHidden($this->nav_point);
+            $this->unsetByList($config['ignore'], $this->nav_point);
         }
-        else {
-            $this->print_error('Nav config is invalid.');
-        }
+        else
+            $this->printError('Nav config is invalid.');
     }
 
 
@@ -82,31 +79,29 @@ class Nav extends Chameleon {
      * @return bool $ If err === 0 True, otherwise False.
      */
 
-    private function check_config($config) {
+    private function checkConfig($config)
+    {
         $err = 0;
         $valid_item = ['nav_root'=>'dir', 'files'=>'bool', 'dirs'=>'bool'];
 
-        foreach ($valid_item as $item => $type)
-        {
+        foreach ($valid_item as $item => $type) {
             if (!array_key_exists($item, $config)) {
-                $this->print_error('No '.$item.' in Nav config array');
+                $this->printError('No '.$item.' in Nav config array');
                 unset($valid_item[$item]);
                 $err++;
             }
         }
 
         foreach ($valid_item as $item => $type) {
-            if ($type === 'dir')
-            {
+            if ($type === 'dir') {
                 if (!is_dir($config[$item])) {
-                    $this->print_error($item.' not a valid directory.');
+                    $this->printError($item.' not a valid directory.');
                     $err++;
                 }
             }
-            else if ($type === 'bool')
-            {
+            else if ($type === 'bool') {
                 if (!is_bool($config[$item])) {
-                    $this->print_error($item.
+                    $this->printError($item.
                         ' of wrong type, it is '.gettype($item).' should be '.$type);
                     $err++;
                 }
@@ -124,7 +119,7 @@ class Nav extends Chameleon {
      * @return int $num_files The number of files found.
      */
 
-    private function get_files($dir, &$_array)
+    private function getFiles($dir, &$_array)
     {
         $num_files = 0;
 
@@ -147,7 +142,7 @@ class Nav extends Chameleon {
      *
      */
 
-    private function get_dirs($dir, &$_array)
+    private function getDirs($dir, &$_array)
     {
         $num_dirs = 0;
 
@@ -172,7 +167,7 @@ class Nav extends Chameleon {
      * @return int $num_unset The number of hidden files unset.
      */
 
-    private function remove_hidden(&$dir_contents)
+    private function removeHidden(&$dir_contents)
     {
         $num_unset = 0;
 
@@ -197,7 +192,7 @@ class Nav extends Chameleon {
      * @return int $num_unset
      */
 
-    private function unset_by_list($unset_list, &$_array)
+    private function unsetByList($unset_list, &$_array)
     {
         $num_unset = 0;
 
@@ -210,9 +205,9 @@ class Nav extends Chameleon {
     }
 
 
-    public function get_nav_points()
+    public function getNavPoints()
     {
-        return $this->nav_point();
+        return $this->nav_point;
     }
 
 
@@ -226,7 +221,7 @@ class Nav extends Chameleon {
     }
 
 
-    public function get_nav_root()
+    public function getNavRoot()
     {
         return $this->nav_root;
     }
