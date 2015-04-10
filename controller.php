@@ -9,7 +9,7 @@ namespace app;
  * @return void
  */
 
-function include_page_from_uri() {
+function includePageFromUri() {
     $URI = ltrim(filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL), '/');
 
     if (!empty($_GET)) {
@@ -32,7 +32,7 @@ function include_page_from_uri() {
  * Prints the required HTML header data (based on config).
  */
 
-function print_site_header()
+function printSiteHeader()
 {
     print '
     <meta charset="utf-8">
@@ -67,7 +67,7 @@ function print_site_header()
  * Prints the script tags required for Chameleon/Bootstrap to function.
  */
 
-function print_required_scripts()
+function printRequiredScripts()
 {
     print '
     <script src="'.BOOTSTRAP_DIR.'/js/bootstrap.min.js"></script>
