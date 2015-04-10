@@ -1,0 +1,22 @@
+[Wed Apr 08 08:07:30.568855 2015] [core:error] [pid 47818] [client 91.224.160.162:33901] AH00126: Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Wed Apr 08 08:07:39.986833 2015] [core:error] [pid 47818] (13)Permission denied: [client 91.224.160.162:35529] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 10:51:38.579374 2015] [core:error] [pid 47835] [client 72.167.115.125:52238] AH00126: Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Wed Apr 08 10:51:47.877995 2015] [core:error] [pid 47818] (13)Permission denied: [client 72.167.115.125:55771] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 10:57:03.021548 2015] [core:error] [pid 47904] [client 72.167.115.125:34441] AH00126: Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Wed Apr 08 10:57:06.829689 2015] [core:error] [pid 47814] (13)Permission denied: [client 72.167.115.125:35922] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 10:59:19.471651 2015] [core:error] [pid 48374] [client 72.167.115.125:54750] AH00126: Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Wed Apr 08 10:59:23.310501 2015] [core:error] [pid 48380] (13)Permission denied: [client 72.167.115.125:56038] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 14:23:17.160175 2015] [core:error] [pid 48342] [client 173.161.245.108:48530] AH00126: Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Wed Apr 08 14:23:23.759036 2015] [core:error] [pid 48379] (13)Permission denied: [client 173.161.245.108:49120] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 16:02:33.714876 2015] [core:error] [pid 48378] [client 188.111.32.207:45914] AH00126: Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Wed Apr 08 16:02:40.933213 2015] [core:error] [pid 48738] (13)Permission denied: [client 188.111.32.207:46895] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 16:02:58.391113 2015] [core:error] [pid 48377] (13)Permission denied: [client 188.111.32.207:49101] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 17:11:05.796053 2015] [core:error] [pid 48381] [client 202.43.73.37:23110] AH00126: Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Wed Apr 08 17:11:17.782626 2015] [core:error] [pid 48381] (13)Permission denied: [client 202.43.73.37:23661] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 17:27:18.547040 2015] [core:error] [pid 48377] [client 69.171.20.217:22900] AH00126: Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Wed Apr 08 17:27:24.427617 2015] [core:error] [pid 48381] (13)Permission denied: [client 69.171.20.217:23325] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 18:45:11.089514 2015] [core:error] [pid 48376] [client 211.25.49.30:13033] AH00126: Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Wed Apr 08 18:45:28.436073 2015] [core:error] [pid 48342] (13)Permission denied: [client 211.25.49.30:13055] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 18:45:31.289449 2015] [core:error] [pid 49190] (13)Permission denied: [client 211.25.49.30:13215] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi
+[Wed Apr 08 19:16:20.714078 2015] [core:error] [pid 48375] [client 206.208.109.238:17158] AH00126: Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Wed Apr 08 19:16:26.585588 2015] [core:error] [pid 49190] (13)Permission denied: [client 206.208.109.238:17720] AH00132: file permissions deny server access: /usr/local/www/apache24/cgi-bin/test-cgi

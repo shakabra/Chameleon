@@ -244,3 +244,4 @@ class Nav extends Chameleon
         return $html;
     }
 }
+

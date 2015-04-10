@@ -269,3 +269,4 @@ class Database extends Chameleon
         return $result;
     }
 }
+
