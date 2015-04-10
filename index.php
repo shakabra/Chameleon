@@ -1,19 +1,24 @@
 <?php
 namespace app;
+
+require_once('vendor/autoload.php');
 require_once('config.php'); 
 require_once('controller.php'); 
-?>
 
+
+print '
 <!DOCTYPE html>
 <html lang="en">
 
   <head>
-    <?php printSiteHeader(); ?>
+    '.printSiteHeader().'
   </head>
 
   <body>
-    <?php includePageFromUri(); ?>
-    <?php printRequiredScripts(); ?>
+    '.includePageFromUri().'
+    '.printRequiredScripts().'
   </body>
 
 </html>
+';
+
