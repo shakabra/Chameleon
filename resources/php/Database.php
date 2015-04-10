@@ -53,7 +53,7 @@ class Database extends Chameleon
             $this->config = $config;
         }
         else {
-            $this->print_error('Invalid Database Configuration');
+            $this->printError('Invalid Database Configuration');
         }
     }
 
@@ -74,7 +74,7 @@ class Database extends Chameleon
         foreach ($config_keys as $key)
         {
             if (!array_key_exists($key, $config)) {
-                $this->print_error("Config $key missing");
+                $this->printError("Config $key missing");
             }
         }
 
@@ -101,7 +101,7 @@ class Database extends Chameleon
         }
         catch (PDOException $pdo_e) {
             error_log($pdo_e->getMessage());
-            $this->print_error('Connection error '.$pdo_e->getMessage());
+            $this->printError('Connection error '.$pdo_e->getMessage());
         }
     }
 
@@ -141,7 +141,7 @@ class Database extends Chameleon
         
         if (! $result instanceof PDOStatement) {
             $result = False;
-            $this->print_warning("Query did not return PDOStatement");
+            $this->printWarning("Query did not return PDOStatement");
         }
 
         $this->close();
@@ -244,7 +244,7 @@ class Database extends Chameleon
             }
             catch(Exception $e) {
                 error_log(__METHOD__.' '.$e->getMessage().' '.$e->getCode());
-                $this->print_error('Could not get tables.');
+                $this->printError('Could not get tables.');
             }
         }
         return $this->tables;

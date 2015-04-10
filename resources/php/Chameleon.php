@@ -3,7 +3,7 @@
  * A base class available for use within Chameleon framework.
  */
 
-class Chameleon
+abstract class Chameleon
 {
     /**
      * Prints a given error as a [class]-warning.
@@ -11,7 +11,7 @@ class Chameleon
      * @return void
      */
 
-    protected function print_warning($error)
+    protected function printWarning($error)
     {
         $calling_class = debug_backtrace()[1]['class'];
         print 
@@ -31,7 +31,7 @@ class Chameleon
      * @return void
      */
 
-    protected function print_error($error)
+    protected function printError($error)
     {
         $calling_class = debug_backtrace()[1]['class'];
         print 

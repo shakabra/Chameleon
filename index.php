@@ -8,12 +8,12 @@ require_once('controller.php');
 <html lang="en">
 
   <head>
-    <?php print_site_header(); ?>
+    <?php printSiteHeader(); ?>
   </head>
 
   <body>
-    <?php include_page_from_uri(); ?>
-    <?php print_required_scripts(); ?>
+    <?php includePageFromUri(); ?>
+    <?php printRequiredScripts(); ?>
   </body>
 
 </html>

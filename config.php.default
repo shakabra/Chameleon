@@ -22,6 +22,7 @@ define('CSS_DIR', '/resources/css');
 define('HTML_DIR', 'resources/html');
 define('IMG_DIR', '/resources/img');
 define('JS_DIR', '/resources/js');
+define('JQUERY_UI_DIR', JS_DIR.'/jquery-ui-1.11.4.custom');
 define('PAGES_DIR', APP_ROOT.'/pages');
 define('PHP_DIR', 'resources/php');
 define('SITE_TITLE', 'chameleon');
