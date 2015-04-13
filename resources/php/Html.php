@@ -1,6 +1,6 @@
 <?php
 
-class HTML
+class Html
 {
     private static function generate_html(&$description)
     {
