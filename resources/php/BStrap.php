@@ -1,6 +1,6 @@
 <?php
 namespace BStrap;
-require_once PHP_DIR.'/HTML.php';
+require_once PHP_DIR.'/Html.php';
 
 
 abstract class BStrapElement
