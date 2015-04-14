@@ -36,12 +36,12 @@ class Html
      * is optional.
      *
      * @param string|array &$spec
-     * @param string &$type = __method__ of calling function.
+     * @param string &$type = Type of calling function.
      *
      * @return string 
      */
 
-    public static function simpleElement (&$spec, &$type)
+    public static function simpleElement (&$spec, $type)
     {
         $description = ['tag'     => ltrim($type, 'HTML::'),
                         'attribs' => ['id', 'text'],
@@ -49,26 +49,26 @@ class Html
 
         return self::generate_html($description);
     }
-    public static function h1 ($spec=[], $type=__method__) {
-        return self::simpleElement($spec, $type);
+    public static function h1 ($spec=[]) {
+        return self::simpleElement($spec, 'h1');
     }
-    public static function h2 ($spec=[], $type=__method__) {
-        return self::simpleElement($spec, $type);
+    public static function h2 ($spec=[]) {
+        return self::simpleElement($spec, 'h2');
     }
-    public static function h3 ($spec=[], $type=__method__) {
-        return self::simpleElement($spec, $type);
+    public static function h3 ($spec=[]) {
+        return self::simpleElement($spec, 'h3');
     }
-    public static function h4 ($spec=[], $type=__method__) {
-        return self::simpleElement($spec, $type);
+    public static function h4 ($spec=[]) {
+        return self::simpleElement($spec, 'h4');
     }
-    public static function h5 ($spec=[], $type=__method__) {
-        return self::simpleElement($spec, $type);
+    public static function h5 ($spec=[]) {
+        return self::simpleElement($spec, 'h5');
     }
-    public static function p ($spec=[], $type=__method__) {
-        return self::simpleElement($spec, $type);
+    public static function p ($spec=[]) {
+        return self::simpleElement($spec, 'p');
     }
-    public static function span ($spec=[], $type=__method__) {
-        return self::simpleElement($spec, $type);
+    public static function span ($spec=[]) {
+        return self::simpleElement($spec, 'span');
     }
 
 
