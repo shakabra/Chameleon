@@ -3,7 +3,7 @@ RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteCond %{SCRIPT_FILENAME} !-f 
 RewriteRule ^.*$ ./index.php
 
-<Files ~ "(config|controller).php"> 
+<Files ~ "(composer.(json|phar|lock)|(config|controller).php)"> 
 	Order deny,allow 
 	Deny from all 
 </Files>
