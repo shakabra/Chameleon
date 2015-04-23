@@ -33,7 +33,7 @@ class Registry extends Chameleon
     
     public static function isStored($name)
     {
-	if (in_array($name, $_store))
+	if (in_array($name, self::$_store))
 	    return true;
 	else
 	    return false;
