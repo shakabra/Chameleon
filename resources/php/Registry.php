@@ -15,7 +15,7 @@ class Registry extends Chameleon
         if (is_null($name)) $name = get_class($object);
 
         if (isset(self::$_store[$name]))
-            printWarning('Already an object: '. $name .' in the Registry');
+            self::printWarning('Already an object: '. $name .' in the Registry');
 
         self::$_store[$name] = $object; 
     }
@@ -23,9 +23,18 @@ class Registry extends Chameleon
     public static function get($name)
     {
         if (!array_key_exists($name, self::$_store))
-            printError('Item: '. $name .' not in the Registry');
+            self::printError('Item: '. $name .' not in the Registry');
 
         return self::$_store[$name];
+    }
+
+    
+    public static function isStored($name)
+    {
+	if (in_array($_store, $name))
+	    return true;
+	else
+	    return false;
     }
 
     public function __toString()
