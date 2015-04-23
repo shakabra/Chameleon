@@ -10,6 +10,7 @@ class Registry extends Chameleon
 {
     private static $_store = array();
 
+
     public static function add($object, $name=null)
     {
         if (is_null($name)) $name = get_class($object);
@@ -19,6 +20,7 @@ class Registry extends Chameleon
 
         self::$_store[$name] = $object; 
     }
+
 
     public static function get($name)
     {
@@ -31,7 +33,7 @@ class Registry extends Chameleon
     
     public static function isStored($name)
     {
-	if (in_array($_store, $name))
+	if (in_array($name, $_store))
 	    return true;
 	else
 	    return false;
