@@ -33,11 +33,9 @@ class Registry extends Chameleon
     
     public static function isStored($name)
     {
-	if (in_array($name, self::$_store))
-	    return true;
-	else
-	    return false;
+	return array_key_exists($name, self::$_store);
     }
+
 
     public function __toString()
     {
@@ -47,6 +45,7 @@ class Registry extends Chameleon
 
         return $_string;
     }
+
 
     public function toHtml()
     {
