@@ -4,8 +4,9 @@
  *
  * @author Jason Favrod <lakona808@gmail.com>
  */
+require_once 'Chameleon.php';
 
-class Registry
+class Registry extends Chameleon
 {
     private static $_store = array();
 
@@ -14,7 +15,7 @@ class Registry
         if (is_null($name)) $name = get_class($object);
 
         if (isset(self::$_store[$name]))
-            throw new Exception('Already an object: '. $name .' in the Registry');
+            printWarning('Already an object: '. $name .' in the Registry');
 
         self::$_store[$name] = $object; 
     }
@@ -22,7 +23,7 @@ class Registry
     public static function get($name)
     {
         if (!array_key_exists($name, self::$_store))
-            throw new Exception('Item: '. $name .' not in the Registry');
+            printError('Item: '. $name .' not in the Registry');
 
         return self::$_store[$name];
     }
