@@ -1,9 +1,4 @@
 <?php
-namespace app;
-
-use Registry;
-
-
 /**
  * Grabs the request URI, parses it, then includes any requested page
  * that is in the PAGES_DIR.
@@ -13,7 +8,6 @@ use Registry;
 
 function includePageFromUri() {
     $URI = ltrim(filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL), '/');
-    Registry::add("$URI", 'currentPage');
 
     if (!empty($_GET)) {
         $URI = strstr($URI, '?', true);
