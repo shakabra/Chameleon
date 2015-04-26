@@ -20,4 +20,4 @@ https://lakonacomputers.com/owncloud/public.php?service=files&t=f31cd6e35cce38eb
 
 @author Jason Favrod <lakona808@gmail.com>
 
-@version 0.2
+@version 0.3
