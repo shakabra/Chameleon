@@ -1,13 +1,18 @@
 <?php
 /**
+ * Chameleon
+ *
  * A base class available for use within Chameleon framework.
  */
 
 abstract class Chameleon
 {
     /**
+     * printWarning
+     *
      * Prints a given error as a [class]-warning.
      *
+     * @param String $error
      * @return void
      */
 
@@ -26,8 +31,11 @@ abstract class Chameleon
 
 
     /**
+     * printError
+     *
      * Prints a given error as a [class]-error.
      *
+     * @param String $error
      * @return void
      */
 
