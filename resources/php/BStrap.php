@@ -33,27 +33,27 @@ abstract class BStrapElement
     }
 
 
-    public function set_id($id)
+    public function setId($id)
     {
         $this->id = $id;
     }
 
 
-    public function set_class($class)
+    public function setClass($class)
     {
         $this->class = $class;
     }
 
 
     /**
-     * open_div_tag
+     * openingTag
      *
      * Forms an opening div tag for a Bootstrap CSS row.
      *
      * @return string An HTML markup of a Bootstrap CSS row.
      */
 
-    protected function opening_tag()
+    protected function openingTag()
     {
         if ($this->tag == null)
             $html  = '<div ';
@@ -74,7 +74,7 @@ abstract class BStrapElement
     }
 
 
-    protected function closing_tag()
+    protected function closingTag()
     {
         $html = '';
 
@@ -104,7 +104,7 @@ class Container extends BStrapElement
                             /* and then unloaded onto a page.               */
 
 
-    public function set_type($type)
+    public function setType($type)
     {
         if ($type == 'container') {
             $this->type = 'container';
@@ -116,28 +116,28 @@ class Container extends BStrapElement
 
 
     /**
-     * add_row
+     * addRow
      *
      * Appends a Bootstrap CSS row to this object's row array.
      *
      * @param BStrap\Row $row The row to be appended to the row array.
      */
 
-    public function add_row($row)
+    public function addRow($row)
     {
         return array_push($this->row, $row);
     }
 
 
     /**
-     * grab_row
+     * grabRow
      *
      * Grabs (and removes) a row from the row array.
      *
      * @return BStrap\Row A row from the front of the row array (queue).
      */
 
-    protected function grab_row($row_id=null)
+    protected function grabRow($row_id=null)
     {
         return array_shift($this->row);
     }
@@ -145,13 +145,13 @@ class Container extends BStrapElement
 
     public function toHtml()
     {
-        $html  = $this->opening_tag();
+        $html  = $this->openingTag();
 
         foreach ($this->row as $r) {
             $html .= $r->toHtml();
         }
 
-        $html .= $this->closing_tag();;
+        $html .= $this->closingTag();;
         return $html;
     }
 }
@@ -163,20 +163,20 @@ class Row extends BStrapElement
     protected $col  = [];
 
 
-    public function add_column($col)
+    public function addColumn($col)
     {
         return array_push($this->col, $col);
     }
 
     public function toHtml()
     {
-        $html  = $this->opening_tag();
+        $html  = $this->openingTag();
 
         foreach ($this->col as $column) {
             $html .= $column->toHtml();
         }
             
-        $html .= $this->closing_tag();;
+        $html .= $this->closingTag();;
         return $html;
     }
 }
@@ -188,20 +188,20 @@ class Column extends BStrapElement
     protected $html_element = [];
 
 
-    public function add_element($html_elem)
+    public function addElement($html_elem)
     {
         array_push($this->html_element, $html_elem);
     }
 
     public function toHtml()
     {
-        $html  = $this->opening_tag();
+        $html  = $this->openingTag();
 
         foreach ($this->html_element as $html_elem) {
             $html .= $html_elem;
         }
 
-        $html .= $this->closing_tag();;
+        $html .= $this->closingTag();;
         return $html;
     }
 }
