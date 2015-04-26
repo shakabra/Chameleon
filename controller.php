@@ -1,5 +1,4 @@
 <?php
-namespace app;
 
 
 /**
@@ -9,26 +8,55 @@ namespace app;
  * @return void
  */
 
-function includePageFromUri() {
-    $URI = ltrim(filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL), '/');
+function includePageFromUri()
+{
+    $URI = requestUri();
 
-    if (!empty($_GET)) {
+    if (!empty($_GET))
         $URI = strstr($URI, '?', true);
-    }
 
-    if ($URI === '' && DEFAULT_PAGE){
+    if ($URI === '' && DEFAULT_PAGE)
         include(PAGES_DIR.'/'.DEFAULT_PAGE);
-    }
-    else if (in_array("$URI.php", scandir(PAGES_DIR))) {
+
+    else if (isInPagesDir("$URI.php"))
         include(PAGES_DIR."/$URI.php");
-    }
-    else {
+
+    else
         include(PAGES_DIR.'/404.php');
-    }
 }
 
 
 /**
+ * uri
+ * 
+ * @return The filtered REQUEST_URI.
+ */
+
+function requestUri()
+{
+    return
+        ltrim(filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL), '/');  
+}
+
+
+/**
+ * isInPagesDir
+ *
+ * @param String $page The name of the file to check existance of in
+ * PAGES_DIR.
+ *
+ * @return Boolean True if $page is a file in the PAGES_DIR false
+ * otherwise.
+ */
+
+function isInPagesDir($page)
+{
+    return in_array($page, scandir(PAGES_DIR));
+}
+
+/**
+ * printSiteHeader
+ *
  * Prints the required HTML header data (based on config).
  */
 
@@ -43,7 +71,7 @@ function printSiteHeader()
     <meta name="keywords" content="">
     <meta name="author" content="">
 
-    <title>'.SITE_TITLE.'</title>
+    <title>'.htmlTitle().'</title>
 
     <script src="'.JS_DIR.'/jquery-1.11.2.min.js"></script>
     <script src="'.JQUERY_UI_DIR.'/external/jquery/jquery.js"></script>
@@ -64,12 +92,28 @@ function printSiteHeader()
 
 
 /**
+ * htmlTitle
+ *
+ * Determines the HTML title.
+ */
+
+function htmlTitle()
+{
+    $URI = requestUri();
+
+    if (isInPagesDir("$URI.php"))
+	return $URI;
+    else
+        return SITE_TITLE;	
+}
+
+
+/**
  * Prints the script tags required for Chameleon/Bootstrap to function.
  */
 
 function printRequiredScripts()
 {
     print '
-    <script src="'.BOOTSTRAP_DIR.'/js/bootstrap.min.js"></script>
-    ';
+    <script src="'.BOOTSTRAP_DIR.'/js/bootstrap.min.js"></script>';
 }
