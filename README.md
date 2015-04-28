@@ -15,7 +15,7 @@ The `pages` directory is where the site's page specific content is
 stored. A function in `controller.php` will load the page specific
 content based on the request URI (this requires modification of the
 Webserver to allow PHP to handle the URIs (rewrite rules provided in
-.htaccess file)). Each page's business logic should have it's own
+.htaccess file)). Each page's business logic should have its own
 controller.
 
 An incomplete guide to [using chameleon](https://lakonacomputers.com/owncloud/public.php?service=files&t=f31cd6e35cce38eb138de2e4975c5d6e) can be found at the following url:
