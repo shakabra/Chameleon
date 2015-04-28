@@ -1,11 +1,14 @@
 <?php
+namespace Epoque\Chameleon;
+
+
 /**
  * Chameleon
  *
  * A base class available for use within Chameleon framework.
  */
 
-abstract class Chameleon
+abstract class BaseClass
 {
     /**
      * printWarning
