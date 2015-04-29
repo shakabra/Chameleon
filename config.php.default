@@ -1,7 +1,9 @@
 <?php
+require_once('vendor/autoload.php');
+
+
 error_reporting(E_ERROR | E_PARSE | E_WARNING);
 #(E_ERROR | E_PARSE | E_WARNING)
-
 
 // Setup some constants.
 define('APP_ROOT', __DIR__);
