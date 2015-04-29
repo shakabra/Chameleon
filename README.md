@@ -7,17 +7,20 @@ A simple MVC style Web application framework utilizing the [Bootstrap](http://ge
 
 The base files are `config.php`, `index.php` and `controller.php`.
 `config.php` is where we store the site's configuration details.
-The `index.php` provides the site's overall html template.
-`index.php`'s business logic is done inside `controller.php`.
+The `index.php` provides the site's overall html template and calls up
+the configuration, and `index.php`'s business logic is done inside
+`controller.php`.
 
-The `pages` directory is where the site's page specific content is stored.
-A function in `controller.php` will load the page specific content based on the request URI
-(this requires modification of the Web server to allow PHP to handle the URIs).
-Each page's business logic should be stored in `resources/php/controllers`.
+The `pages` directory is where the site's page specific content is
+stored. A function in `controller.php` will load the page specific
+content based on the request URI (this requires modification of the
+Webserver to allow PHP to handle the URIs (rewrite rules provided in
+.htaccess file)). Each page's business logic should have its own
+controller.
 
 An incomplete guide to [using chameleon](https://lakonacomputers.com/owncloud/public.php?service=files&t=f31cd6e35cce38eb138de2e4975c5d6e) can be found at the following url:
 https://lakonacomputers.com/owncloud/public.php?service=files&t=f31cd6e35cce38eb138de2e4975c5d6e.
 
 @author Jason Favrod <lakona808@gmail.com>
 
-@version 0.3
+@version 0.4
