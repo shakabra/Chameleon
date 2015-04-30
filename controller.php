@@ -78,8 +78,8 @@ function printSiteHeader()
     <script src="'.JQUERY_UI_DIR.'/jquery-ui.min.js"></script>
 
     <link rel="stylesheet" href="'.BOOTSTRAP_DIR.'/css/bootstrap.min.css">
-    <link rel="stylesheet" href="'.CSS_DIR.'/layout.css">
-    <link rel="stylesheet" href="'.CSS_DIR.'/formatting.css">
+    <link rel="stylesheet" href="'.CSS_DIR.'/fonts.css">
+    <link rel="stylesheet" href="'.CSS_DIR.'/custom.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn\'t work if you view the page via file:// -->
