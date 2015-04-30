@@ -4,8 +4,15 @@ namespace Epoque\Markup;
 
 class Column extends BStrapElement
 {
-    protected $type         = 'col-md-4';
+    protected $class        = 'col-md-4';
     protected $html_element = [];
+
+    public function __construct($spec=[])
+    {
+        if (array_key_exists('class', $spec)) {
+            $this->class = $spec['class'];
+        }
+    }
 
 
     public function addElement($html_elem)
