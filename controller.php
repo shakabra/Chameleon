@@ -12,9 +12,6 @@ function includePageFromUri()
 {
     $URI = requestUri();
 
-    if (!empty($_GET))
-        $URI = strstr($URI, '?', true);
-
     if ($URI === '' && DEFAULT_PAGE)
         include(PAGES_DIR.'/'.DEFAULT_PAGE);
 
