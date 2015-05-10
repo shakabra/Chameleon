@@ -27,6 +27,7 @@ def main():
             config['dist'] = platform.linux_distribution()[0].lower()
 
         set_apache_locations(config)
+        create_vhost(config)
         print (config)
     else:
         print('Insufficent Priviledges\nPlease run as root or admin user.')
@@ -72,13 +73,10 @@ def ask_name(purpose):
     ask  = True
     name = ''
 
-    def valid(test_name, purpose):
-        return True
-
     while (ask):
         name = str(raw_input('What is the Name of your '+purpose.capitalize()+'?\n--> '))
 
-        if (valid(name, purpose)):
+        if (valid(name, 'name')):
             ask = False
         else:
             print('Invalid Project Name')
@@ -87,16 +85,66 @@ def ask_name(purpose):
 
 
 """
+valid
+
+Used to validate user responses.
+
+param item
+param purpose
+return True  :
+return False :
+"""
+def valid(item, purpose):
+    if (purpose == 'name'):
+        return True
+    if (purpose == 'ip'):
+        return True
+    if (purpose == 'email'):
+        return True
+    if (purpose == 'path'):
+        return True
+
+
+"""
 set_apache_locations
 
 Finds the needed Apache configuration locations/files, and stores them
 in the configuration dict.
+
+param config {} : Necessary configuration data.
+return True  : Successfully set Apache locations into config.
+return False : Failed to set Apache locations into config.
 """
 def set_apache_locations(config):
     if (config['platform'] == 'linux'):
         if (config['dist'] == 'ubuntu' or config['dist'] == 'debian'):
             config['apache_conf'] = os.path.abspath('/etc/apache2/apache2.conf')
             config['vhost_dir'] = os.path.abspath('/etc/apache2/sites-available')
+
+
+"""
+create_vhost
+
+Create an Apache virtual host for the project.
+"""
+def create_vhost(config):
+    ip                = '*'
+    srv_admin         = 'webmaster@localhost'
+    srv_name          = ''
+    srv_location      = ''
+
+    # Strings we need to use for the UI:
+    ask_about_ip      = 'Project requires specification of IP address? [y|n]\n--> '
+    ask_for_ip        = 'What IP would you like to use?\n--> '
+    ip_validation_err = '! IP address given is not valid !'
+    ask_about_admin   = 'Would you like to specify a ServerAdmin? [y|n]\n--> '
+    ask_for_svr_admin = 'What email would you like to set as ServerAdmin?\n--> '
+    ask_for_svr_name  = 'What is the ServerName?\n--> '
+    ask_for_svr_loc   = 'Where in the filesystem is the project?\n--> '
+
+
+    vhost  = '<VirtualHost '+ip+':80>'
+    vhost += ''
 
 
 """
