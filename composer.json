@@ -1,8 +1,5 @@
 {
     "require": {
         "monolog/monolog": "~1.13"
-    },
-    "autoload": {
-        "psr-4": {"Epoque\\Markup\\": "vendor/epoque/markup/src"}
     }
 }
