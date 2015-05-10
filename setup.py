@@ -5,9 +5,14 @@ import platform
 """
 main
 
+Configures a new Chameleon project and performs the setup of its Apache
+virtual host and rewrite module.
 
+return 0 : success
+return 1 : general fail
 """
 def main():
+    exit_code = 0
     config = {}
 
     config['platform']     = platform.system().lower()
@@ -22,12 +27,18 @@ def main():
     # Create a git Branch
 
     # Create Config for the Project.
-    return
+    
+    return exit_code
 
 
 """
-Ask User for Project Name.
-Ask User for Default Page Name.
+ask_name
+
+Asks the user for names for different purposes with validation for each
+sort of purpose.
+
+return string : A valid string with it's first letter capitalized per
+the given purpose.
 """
 def ask_name(purpose):
     ask  = True
@@ -50,7 +61,10 @@ def ask_name(purpose):
 """
 ask_db_config
 
-Ask User for Database Setup.
+Ask user for MySQL database Setup.
+
+return dict : Containing necessary database configuration values.
+return dict : Empty, no database is to be configured.
 """
 def ask_db_config():
     return
