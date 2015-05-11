@@ -191,7 +191,7 @@ def create_vhost(config):
     vhost += '\tDocumentRoot '+locale+'\n'
     vhost += '\n\t<Directory '+locale+'/>\n'
     vhost += '\tOptions Indexes FollowSymLinks\n'
-    vhost += '\tAllowOverride FileInfo\n'
+    vhost += '\tAllowOverride All\n'
     vhost += '\tRequire all granted\n'
     vhost += '\t</Directory>\n'
     vhost += '</VirtualHost>\n'
