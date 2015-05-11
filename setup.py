@@ -33,7 +33,6 @@ def main():
         print('Insufficent Priviledges\nPlease run as root or admin user.')
         exit_code = 5
     
-    # Create a Virtual Host for Project.
     
     # See About Enabling Rewrite Module.
 
@@ -128,23 +127,57 @@ create_vhost
 Create an Apache virtual host for the project.
 """
 def create_vhost(config):
-    ip                = '*'
-    srv_admin         = 'webmaster@localhost'
-    srv_name          = ''
-    srv_location      = ''
+    vhost       = ''
+    ip          = '*'
+    admin       = 'webmaster@localhost'
+    name        = ''
+    locale      = ''
+    vhost_file  = open(config['vhost_dir']+'/'+config['proj_name']+'.conf', 'w')
 
     # Strings we need to use for the UI:
     ask_about_ip      = 'Project requires specification of IP address? [y|n]\n--> '
     ask_for_ip        = 'What IP would you like to use?\n--> '
-    ip_validation_err = '! IP address given is not valid !'
     ask_about_admin   = 'Would you like to specify a ServerAdmin? [y|n]\n--> '
-    ask_for_svr_admin = 'What email would you like to set as ServerAdmin?\n--> '
-    ask_for_svr_name  = 'What is the ServerName?\n--> '
-    ask_for_svr_loc   = 'Where in the filesystem is the project?\n--> '
+    ask_for_admin     = 'What email would you like to set as ServerAdmin?\n--> '
+    ask_for_name      = 'What is the ServerName?\n--> '
+    ask_for_locale    = 'In which directory is the project located?\n--> '
+    ip_validation_err = '! IP address given is not valid !'
+    name_error        = '! Name given is not valid !'
+    filesystem_error  = '! Not a Valid !'
 
+    # Ask the things:
+    if (raw_input(ask_about_ip)[0].lower() == 'y'):
+        ip = raw_input(ask_for_ip)
+        while not valid(ip, 'ip'):
+            print ip_validation_error
+            ip = raw_input(ask_for_ip)
 
-    vhost  = '<VirtualHost '+ip+':80>'
-    vhost += ''
+    if (raw_input(ask_about_admin)[0].lower() == 'y'):
+        ip = raw_input(ask_for_admin)
+        while not valid(admin, 'name'):
+            print name_error
+            ip = raw_input(ask_for_ip)
+    
+    name = raw_input(ask_for_name)
+    while not valid(name, 'name'):
+        print name_error
+        name = raw_input(ask_for_name)
+
+    locale = raw_input(ask_for_locale)
+    while not valid(locale, 'path'):
+        print filesystem_error
+        name = raw_input(ask_for_name)
+
+    # Write the virtual host to memory:
+    vhost  = '<VirtualHost '+ip+':80>\n'
+    vhost += '\tServerAdmin '+admin+'\n'
+    vhost += '\tServerName '+name+'\n'
+    vhost += '\tDirectoryRoot '+locale+'\n'
+    vhost += '</VirtualHost>\n'
+
+    # Dump vhost to the vhost file:
+    vhost_file.write(vhost)
+    vhost_file.close()
 
 
 """
