@@ -35,6 +35,8 @@ def main():
         enable_mod_rewrite()
         restart_apache(config)
         setup_repo()
+        db_config(config)        
+        write_config_file(config)
 
         print (config)
     else:
@@ -273,9 +275,28 @@ Ask user for MySQL database Setup.
 return dict : Containing necessary database configuration values.
 return dict : Empty, no database is to be configured.
 """
-def ask_db_config():
+def db_config(config):
+    # Ask user if they want to specify database connection information.
+    # If yes ask for db {name, user, password, host} and store them
+    # in config['db_info'] dict.
+    # If no, nevermind.
+    ask_about_mysql = 'Would you like to enter MySQL database configuration?'
+    ask_about_mysql = ' [y|n]\n--> '
+    db_info = {}
     return
 
+
+"""
+create_config
+
+Create a new configuration file from Chameleon's default configuration.
+"""
+def write_config_file(config):
+    # Open default config and read it into a string.
+    # Write that string to a file named config.php.
+    # Search for 'chameleon' and replace with config['proj_name']
+    # If config['db_info']
+    return
 
 
 if __name__ == '__main__':
