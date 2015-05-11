@@ -2,6 +2,8 @@
 import os
 import sys
 import platform
+import re
+import socket
 
 
 """
@@ -86,23 +88,36 @@ def ask_name(purpose):
 """
 valid
 
-Used to validate user responses.
+Used to validate user responses (strings)
+for a given purpose (purpose).
 
-param item
+param string
 param purpose
+
 return True  :
 return False :
 """
-def valid(item, purpose):
+def valid(string, purpose):
+    response = True
     if (purpose == 'name'):
-        return True
-    if (purpose == 'ip'):
-        return True
-    if (purpose == 'email'):
-        return True
-    if (purpose == 'path'):
-        return True
+        NAME_MAX = 255; 
+        response = 1<=len(string)<= NAME_MAX and "/" not in string and "\000" not in string
 
+    if (purpose == 'ip'):
+        try: 
+            socket.inet_aton(string)
+        except socket.error:
+            response = False
+
+    if (purpose == 'email'):
+        if re.match(r"[^@]+@[^@]+\.[^@]+", string) is None:
+            response = False
+
+    if (purpose == 'path'):
+        NAME_MAX = 255; 
+        response = 1<=len(string)<= NAME_MAX and  "\000" not in string
+
+    return response
 
 """
 set_apache_locations
