@@ -33,6 +33,7 @@ def main():
         set_apache_locations(config)
         create_vhost(config)
         enable_mod_rewrite()
+        restart_apache()
         setup_repo()
 
         print (config)
@@ -226,6 +227,20 @@ def enable_mod_rewrite():
 
 
 """
+restart_apache
+
+Issues the approprate command to restart Apache.
+"""
+def restart_apache:
+    if (config['platform' == 'linux']):
+
+        if (config['dist'] == 'ubuntu'):
+            subprocess.call(['apachectl', 'restart'])
+
+    return
+
+
+"""
 setup_repo
 
 Creates a branch called chameleon that is meant to follow the
@@ -234,9 +249,9 @@ to the latest version if desired. Removes remote 'origin', and asks
 user to specify a new remote.
 """
 def setup_repo():
+    tmpfile = tempfile.TemporaryFile(mode='w')
     ask_about_repo = """Would you like to setup the git repo? [Y|n]\n'
     (This should only be done directly after cloning Chameleon)\n--> """
-    tmpfile = tempfile.TemporaryFile(mode='w')
 
     if (subprocess.call(['git', 'status'], stderr=tmpfile) == 0 and
             raw_input(ask_about_repo)[0].lower() != 'n'):
