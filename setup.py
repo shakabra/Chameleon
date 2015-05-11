@@ -33,7 +33,7 @@ def main():
         set_apache_locations(config)
         create_vhost(config)
         enable_mod_rewrite()
-        restart_apache()
+        restart_apache(config)
         setup_repo()
 
         print (config)
@@ -231,8 +231,8 @@ restart_apache
 
 Issues the approprate command to restart Apache.
 """
-def restart_apache:
-    if (config['platform' == 'linux']):
+def restart_apache(config):
+    if (config['platform'] == 'linux'):
 
         if (config['dist'] == 'ubuntu'):
             subprocess.call(['apachectl', 'restart'])
@@ -247,13 +247,16 @@ Creates a branch called chameleon that is meant to follow the
 development of Chameleon so that this project can be easily updated
 to the latest version if desired. Removes remote 'origin', and asks
 user to specify a new remote.
+
+TODO: the default is Y, but the if statement is counting on having an
+indexed string (so a user can not leave the selection blank).
 """
 def setup_repo():
     tmpfile = tempfile.TemporaryFile(mode='w')
-    ask_about_repo = """Would you like to setup the git repo? [Y|n]\n'
-    (This should only be done directly after cloning Chameleon)\n--> """
+    ask_about_repo  = 'Would you like to setup the git repo? [Y|n]\n'
+    ask_about_repo += '(This should only be done directly after cloning Chameleon)\n--> '
 
-    if (subprocess.call(['git', 'status'], stderr=tmpfile) == 0 and
+    if (subprocess.call(['git', 'status'], stdout=tmpfile, stderr=tmpfile) == 0 and
             raw_input(ask_about_repo)[0].lower() != 'n'):
         subprocess.call(['git', 'branch', '-b', 'chameleon'], stderr=tmpfile);
         subprocess.call(['git', 'remote', 'remove', 'origin'], stderr=tmpfile);
