@@ -4,6 +4,8 @@ import sys
 import platform
 import re
 import socket
+import subprocess
+import tempfile
 
 
 """
@@ -30,16 +32,14 @@ def main():
 
         set_apache_locations(config)
         create_vhost(config)
+        enable_mod_rewrite()
+        setup_repo()
+
         print (config)
     else:
         print('Insufficent Priviledges\nPlease run as root or admin user.')
         exit_code = 5
     
-    
-    # See About Enabling Rewrite Module.
-
-    # Create a git Branch
-
     # Create Config for the Project.
     
     sys.exit(exit_code)
@@ -133,7 +133,7 @@ def set_apache_locations(config):
     if (config['platform'] == 'linux'):
         if (config['dist'] == 'ubuntu' or config['dist'] == 'debian'):
             config['apache_conf'] = os.path.abspath('/etc/apache2/apache2.conf')
-            config['vhost_dir'] = os.path.abspath('/etc/apache2/sites-available')
+            config['vhost_dir'] = os.path.abspath('/etc/apache2/sites-enabled')
 
 
 """
@@ -187,12 +187,64 @@ def create_vhost(config):
     vhost  = '<VirtualHost '+ip+':80>\n'
     vhost += '\tServerAdmin '+admin+'\n'
     vhost += '\tServerName '+name+'\n'
-    vhost += '\tDirectoryRoot '+locale+'\n'
+    vhost += '\tDocumentRoot '+locale+'\n'
+    vhost += '\n\t<Directory '+locale+'/>\n'
+    vhost += '\tOptions Indexes FollowSymLinks\n'
+    vhost += '\tAllowOverride FileInfo\n'
+    vhost += '\tRequire all granted\n'
+    vhost += '\t</Directory>\n'
     vhost += '</VirtualHost>\n'
 
     # Dump vhost to the vhost file:
     vhost_file.write(vhost)
     vhost_file.close()
+
+
+"""
+enable_mod_rewrite
+
+return True  : mod_rewrite is enabled.
+return False : mod_rewrite not enabled.
+"""
+def enable_mod_rewrite():
+    response = 0
+
+    try:
+        # If this command fails, exception thrown
+        subprocess.check_output(['apachectl', '-M'])
+        if (config['platform'] == 'linux'):
+
+            if (config['dist'] == 'ubuntu'):
+                response = subprocess.call(['a2enmod', 'rewrite'])
+    except:
+        response = 1
+
+    if response == 0:
+        return True
+    else:
+        return False
+
+
+"""
+setup_repo
+
+Creates a branch called chameleon that is meant to follow the
+development of Chameleon so that this project can be easily updated
+to the latest version if desired. Removes remote 'origin', and asks
+user to specify a new remote.
+"""
+def setup_repo():
+    ask_about_repo = """Would you like to setup the git repo? [Y|n]\n'
+    (This should only be done directly after cloning Chameleon)\n--> """
+    tmpfile = tempfile.TemporaryFile(mode='w')
+
+    if (subprocess.call(['git', 'status'], stderr=tmpfile) == 0 and
+            raw_input(ask_about_repo)[0].lower() != 'n'):
+        subprocess.call(['git', 'branch', '-b', 'chameleon'], stderr=tmpfile);
+        subprocess.call(['git', 'remote', 'remove', 'origin'], stderr=tmpfile);
+
+    tmpfile.close()
+    return
 
 
 """
