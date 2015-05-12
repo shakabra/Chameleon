@@ -21,12 +21,14 @@ return 5 : insufficent priviledges
 def main():
     exit_code = 0
     config = {}
+    config['platform']       = platform.system().lower()
+    config['dist']           = ''
+    config['proj_name']      = ask_name('project')
+    config['default_view']   = ask_name('view')
+    config['default_config'] = 'config.php.default'
+    config['db_info']        = {'name':'', 'user':'', 'pass':'', 'host':''}
 
     if (admin_or_root()):
-        config['platform']     = platform.system().lower()
-        config['proj_name']    = ask_name('project')
-        config['default_view'] = ask_name('view')
-        config['default_config'] = 'config.php.default'
 
         if (config['platform'] == 'linux'):
             config['dist'] = platform.linux_distribution()[0].lower()
@@ -43,8 +45,6 @@ def main():
     else:
         print('Insufficent Priviledges\nPlease run as root or admin user.')
         exit_code = 5
-    
-    # Create Config for the Project.
     
     sys.exit(exit_code)
 
@@ -105,7 +105,7 @@ def valid(string, purpose):
     response = True
     if (purpose == 'name'):
         NAME_MAX = 255; 
-        response = 1<=len(string)<= NAME_MAX and "/" not in string and "\000" not in string
+        response = 1<=len(string)<= NAME_MAX and "/" not in string and "\000" not in string and '*' not in string
 
     if (purpose == 'ip'):
         try: 
@@ -172,10 +172,10 @@ def create_vhost(config):
             ip = raw_input(ask_for_ip)
 
     if (raw_input(ask_about_admin)[0].lower() == 'y'):
-        ip = raw_input(ask_for_admin)
+        admin = raw_input(ask_for_admin)
         while not valid(admin, 'name'):
             print name_error
-            ip = raw_input(ask_for_ip)
+            admin = raw_input(ask_for_admin)
     
     name = raw_input(ask_for_name)
     while not valid(name, 'name'):
@@ -330,20 +330,31 @@ create_config
 Create a new configuration file from Chameleon's default configuration.
 """
 def write_config_file(config):
-    response = True
-    tmp_config = ''
+    response    = True
+    tmp_file    = file
+    tmp_config  = ''
+    config_file = file
 
     # Open default config and read it into a string.
     try:
-        tmp_config = open(config['default_config'], 'r').read()
+        tmp_file = open(config['default_config'], 'r')
+        tmp_config = tmp_file.read()
+        tmp_config = tmp_config.replace('|proj_name|', config['proj_name'])
+        tmp_config = tmp_config.replace('|db_name|', config['db_info']['name'])
+        tmp_config = tmp_config.replace('|db_user|', config['db_info']['user'])
+        tmp_config = tmp_config.replace('|db_pass|', config['db_info']['pass'])
+        tmp_config = tmp_config.replace('|db_host|', config['db_info']['host'])
+        tmp_file.close()
+
+        config = open('config.php', 'w')
+        config.write(tmp_config)
+        config.close()
     except:
         response = False
 
-    # Write that string to a file named config.php.
-    # Search for 'chameleon' and replace with config['proj_name']
-    # If config['db_info']
-    return
+    return response
 
 
 if __name__ == '__main__':
     main()
+
