@@ -5,7 +5,7 @@ A simple MVC style Web application framework utilizing the [Bootstrap](http://ge
 
 *Chameleon is currently under pre-release development. Version 1.0 coming soon!.*
 
-The base files are `config.php`, `index.php` and `controller.php`.
+The core files are `config.php`, `index.php` and `controller.php`.
 `config.php` is where we store the site's configuration details.
 The `index.php` provides the site's overall html template and calls up
 the configuration, and `index.php`'s business logic is done inside
@@ -23,4 +23,4 @@ https://lakonacomputers.com/owncloud/public.php?service=files&t=f31cd6e35cce38eb
 
 @author Jason Favrod <lakona808@gmail.com>
 
-@version 0.4
+@version 0.5
