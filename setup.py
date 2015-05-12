@@ -24,7 +24,7 @@ def main():
     config['platform']       = platform.system().lower()
     config['dist']           = ''
     config['proj_name']      = ask_name('project')
-    config['default_view']   = ask_name('view')
+    config['default_page']   = ask_name('page')
     config['default_config'] = 'config.php.default'
     config['db_info']        = {'name':'', 'user':'', 'pass':'', 'host':''}
 
@@ -256,17 +256,31 @@ TODO: the default is Y, but the if statement is counting on having an
 indexed string (so a user can not leave the selection blank).
 """
 def setup_repo():
-    tmpfile = tempfile.TemporaryFile(mode='w')
-    ask_about_repo  = 'Would you like to setup the git repo? [Y|n]\n'
-    ask_about_repo += '(This should only be done directly after cloning Chameleon)\n--> '
+    response          = True
+    tmpfile           = tempfile.TemporaryFile(mode='w')
+    ask_about_repo    = 'Would you like to setup the git repo? [Y|n]\n'
+    ask_about_repo   += '(This should only be done directly after cloning Chameleon)\n--> '
+    ask_about_origin  = 'Would you like to specify an address for origin? [Y|n]\n-->'
 
-    if (subprocess.call(['git', 'status'], stdout=tmpfile, stderr=tmpfile) == 0 and
-            raw_input(ask_about_repo)[0].lower() != 'n'):
-        subprocess.call(['git', 'branch', '-b', 'chameleon'], stderr=tmpfile);
-        subprocess.call(['git', 'remote', 'remove', 'origin'], stderr=tmpfile);
+    if (subprocess.call(['git', 'status'], stdout=tmpfile, stderr=tmpfile) != 0):
+        print('! You are not in the git repo!')
+        response = False
+    else:
+        if (raw_input(ask_about_repo)[0].lower() != 'n'):
+            subprocess.call(['git', 'branch', 'chameleon'], stderr=tmpfile);
+            subprocess.call(['git', 'remote', 'remove', 'origin'], stderr=tmpfile);
+
+        if (raw_input(ask_about_origin)[0].lower() != 'n'):
+            origin_url = raw_input(ask_for_url)
+            while (subprocess.call(['git', 'set-url', 'origin'],
+                stdout=tmpfile, stderr=tmpfile) != 0):
+                origin_url = raw_input(ask_for_url)
+                response = False
+            
+            response = True
 
     tmpfile.close()
-    return
+    return response
 
 
 """
@@ -340,6 +354,7 @@ def write_config_file(config):
     try:
         tmp_file = open(config['default_config'], 'r')
         tmp_config = tmp_file.read()
+        tmp_config = tmp_config.replace('|default_page|', config['default_page'])
         tmp_config = tmp_config.replace('|proj_name|', config['proj_name'])
         tmp_config = tmp_config.replace('|db_name|', config['db_info']['name'])
         tmp_config = tmp_config.replace('|db_user|', config['db_info']['user'])

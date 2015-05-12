@@ -8,7 +8,7 @@ error_reporting(E_ERROR | E_PARSE | E_WARNING);
 // Setup some constants.
 define('APP_ROOT', __DIR__);
 define('BOOTSTRAP_DIR', 'resources/bootstrap/3.3.1');
-define('DEFAULT_PAGE', '|default.php|');
+define('DEFAULT_PAGE', '|default_page|');
 define('CSS_DIR', '/resources/css');
 define('HTML_DIR', 'resources/html');
 define('IMG_DIR', '/resources/img');
