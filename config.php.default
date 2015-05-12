@@ -8,14 +8,14 @@ error_reporting(E_ERROR | E_PARSE | E_WARNING);
 // Setup some constants.
 define('APP_ROOT', __DIR__);
 define('BOOTSTRAP_DIR', 'resources/bootstrap/3.3.1');
-define('DEFAULT_PAGE', 'default.php');
+define('DEFAULT_PAGE', '|default.php|');
 define('CSS_DIR', '/resources/css');
 define('HTML_DIR', 'resources/html');
 define('IMG_DIR', '/resources/img');
 define('JS_DIR', '/resources/js');
 define('JQUERY_UI_DIR', JS_DIR.'/jquery-ui-1.11.4.custom');
 define('PAGES_DIR', APP_ROOT.'/pages');
-define('SITE_TITLE', 'chameleon');
+define('SITE_TITLE', '|proj_name|');
 
 // Dates Formatting
 define('PUBDATE_FORMAT', 'M d, Y');
@@ -32,10 +32,10 @@ date_default_timezone_set('UTC');
 
 $db_config = [
     'db_driver' => 'mysql', 
-    'db_name' => '', 
-    'db_user' => '',
-    'db_pass' => '',
-    'db_host' => ''
+    'db_name' => '|db_name|', 
+    'db_user' => '|db_user|',
+    'db_pass' => '|db_pass|',
+    'db_host' => '|db_host|'
 ];
 
 

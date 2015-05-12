@@ -123,6 +123,7 @@ def valid(string, purpose):
 
     return response
 
+
 """
 set_apache_locations
 
