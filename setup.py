@@ -280,9 +280,46 @@ def db_config(config):
     # If yes ask for db {name, user, password, host} and store them
     # in config['db_info'] dict.
     # If no, nevermind.
-    ask_about_mysql = 'Would you like to enter MySQL database configuration?'
-    ask_about_mysql = ' [y|n]\n--> '
+
     db_info = {}
+
+    # Strings for communication with user.
+    ask_about_mysql = 'Would you like to enter MySQL database configuration?'
+    ask_about_mysql += ' [y|n]\n--> '
+    ask_for_db_name = 'Database name------> '
+    ask_for_db_user = 'Database username--> '
+    ask_for_db_pass = 'Database password--> '
+    ask_for_db_host = 'Database hostname--> '
+    # Error Messages
+    db_name_err = '! The name you entered is in valid !'
+    db_user_err = '! The username you entered is in valid !'
+    db_pass_err = '! The password you entered is in valid !'
+    db_host_err = '! The hostname you entered is in valid !'
+
+
+    if (raw_input(ask_about_mysql)[0].lower() == 'y'):
+        db_info['name'] = raw_input(ask_for_db_name)
+        while not valid(db_info['name'], 'name'):
+            print(db_name_err)
+            db_info['name'] = raw_input(ask_for_db_name)
+
+        db_info['user'] = raw_input(ask_for_db_user)
+        while not valid(db_info['user'], 'name'):
+            print(db_user_err)
+            db_info['user'] = raw_input(ask_for_db_user)
+
+        db_info['pass'] = raw_input(ask_for_db_pass)
+        while not valid(db_info['pass'], 'name'):
+            print(db_pass_err)
+            db_info['pass'] = raw_input(ask_for_db_pass)
+
+        db_info['host'] = raw_input(ask_for_db_host)
+        while not valid(db_info['host'], 'name'):
+            print(db_host_err)
+            db_info['host'] = raw_input(ask_for_db_host)
+
+        config['db_info'] = db_info.copy()
+    
     return
 
 
