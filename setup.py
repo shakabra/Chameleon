@@ -26,17 +26,18 @@ def main():
         config['platform']     = platform.system().lower()
         config['proj_name']    = ask_name('project')
         config['default_view'] = ask_name('view')
+        config['default_config'] = 'config.php.default'
 
         if (config['platform'] == 'linux'):
             config['dist'] = platform.linux_distribution()[0].lower()
 
         set_apache_locations(config)
-        create_vhost(config)
-        enable_mod_rewrite()
-        restart_apache(config)
         setup_repo()
         db_config(config)        
         write_config_file(config)
+        create_vhost(config)
+        enable_mod_rewrite()
+        restart_apache(config)
 
         print (config)
     else:
@@ -329,7 +330,15 @@ create_config
 Create a new configuration file from Chameleon's default configuration.
 """
 def write_config_file(config):
+    response = True
+    tmp_config = ''
+
     # Open default config and read it into a string.
+    try:
+        tmp_config = open(config['default_config'], 'r').read()
+    except:
+        response = False
+
     # Write that string to a file named config.php.
     # Search for 'chameleon' and replace with config['proj_name']
     # If config['db_info']
