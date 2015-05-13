@@ -33,17 +33,16 @@ def main():
         if (config['platform'] == 'linux'):
             config['dist'] = platform.linux_distribution()[0].lower()
 
-        set_apache_locations(config)
-        setup_repo()
-        db_config(config)        
-        write_config_file(config)
-        create_vhost(config)
-        enable_mod_rewrite()
-        restart_apache(config)
-
-        print (config)
+        if (not set_apache_locations(config)):                  exit_code = 1
+        if (exit_code == 0 and not setup_repo()):               exit_code = 1
+        if (exit_code == 0 and not db_config(config)):          exit_code = 1        
+        if (exit_code == 0 and not write_config_file(config)):  exit_code = 1
+        if (exit_code == 0 and not create_vhost(config)):       exit_code = 1
+        if (exit_code == 0 and not enable_mod_rewrite(config)): exit_code = 1
+        if (exit_code == 0 and not restart_apache(config)):     exit_code = 1
     else:
-        print('Insufficent Priviledges\nPlease run as root or admin user.')
+        print('Insufficent Priviledges.')
+        print('Please run as root or admin user.')
         exit_code = 5
     
     sys.exit(exit_code)
@@ -84,7 +83,7 @@ def ask_name(purpose):
         if (valid(name, 'name')):
             ask = False
         else:
-            print('Invalid Project Name')
+            print('Invalid Project Name.')
 
     return name
 
@@ -135,116 +134,42 @@ return True  : Successfully set Apache locations into config.
 return False : Failed to set Apache locations into config.
 """
 def set_apache_locations(config):
-    if (config['platform'] == 'linux'):
-        if (config['dist'] == 'ubuntu' or config['dist'] == 'debian'):
-            config['apache_conf'] = os.path.abspath('/etc/apache2/apache2.conf')
-            config['vhost_dir'] = os.path.abspath('/etc/apache2/sites-enabled')
-
-
-"""
-create_vhost
-
-Create an Apache virtual host for the project.
-"""
-def create_vhost(config):
-    vhost       = ''
-    ip          = '*'
-    admin       = 'webmaster@localhost'
-    name        = ''
-    locale      = ''
-    vhost_file  = open(config['vhost_dir']+'/'+config['proj_name']+'.conf', 'w')
-    tmpstr      = ''
-
-    # Strings we need to use for the UI:
-    ask_about_ip      = 'Project requires specification of IP address? [y|N]\n--> '
-    ask_for_ip        = 'What IP would you like to use?\n--> '
-    ask_about_admin   = 'Would you like to specify a ServerAdmin? [Y|n]\n--> '
-    ask_for_admin     = 'What email would you like to set as ServerAdmin?\n--> '
-    ask_for_name      = 'What is the ServerName?\n--> '
-    ask_for_locale    = 'In which directory is the project located?\n--> '
-    ip_validation_err = '! IP address given is not valid !'
-    name_error        = '! Name given is not valid !'
-    filesystem_error  = '! Not a Valid !'
-
-    # Ask the things:
-    tmpstr = raw_input(ask_about_ip)
-    if (len(tmpstr) > 0 and tmpstr[0].lower() == 'y'):
-        ip = raw_input(ask_for_ip)
-        while not valid(ip, 'ip'):
-            print ip_validation_error
-            ip = raw_input(ask_for_ip)
-
-    tmpstr = raw_input(ask_about_admin)
-    if (len(tmpstr) < 1 or  tmpstr[0].lower() != 'n'):
-        admin = raw_input(ask_for_admin)
-        while not valid(admin, 'name'):
-            print name_error
-            admin = raw_input(ask_for_admin)
+    response        = True
+    tmpfile         = tempfile.TemporaryFile(mode='w')
+    apache_version  = subprocess.check_output(['apachectl', '-v'])
+    version_pattern = re.compile('Apache/\d.\d')
     
-    name = raw_input(ask_for_name)
-    while not valid(name, 'name'):
-        print name_error
-        name = raw_input(ask_for_name)
-
-    locale = raw_input(ask_for_locale)
-    while not valid(locale, 'path'):
-        print filesystem_error
-        name = raw_input(ask_for_name)
-
-    # Write the virtual host to memory:
-    vhost  = '<VirtualHost '+ip+':80>\n'
-    vhost += '\tServerAdmin '+admin+'\n'
-    vhost += '\tServerName '+name+'\n'
-    vhost += '\tDocumentRoot '+locale+'\n'
-    vhost += '\n\t<Directory '+locale+'/>\n'
-    vhost += '\tOptions Indexes FollowSymLinks\n'
-    vhost += '\tAllowOverride All\n'
-    vhost += '\tRequire all granted\n'
-    vhost += '\t</Directory>\n'
-    vhost += '</VirtualHost>\n'
-
-    # Dump vhost to the vhost file:
-    vhost_file.write(vhost)
-    vhost_file.close()
-
-
-"""
-enable_mod_rewrite
-
-return True  : mod_rewrite is enabled.
-return False : mod_rewrite not enabled.
-"""
-def enable_mod_rewrite():
-    response = 0
+    # Messages
+    version_fail    = 'Failed to discover Apache Version.'
+    freebsd_fail    = 'Failed to set Apache configuration details for FreeBSD,'
+    linux_fail      = freebsd_fail.replace('FreeBSD', 'Linux.')
 
     try:
-        # If this command fails, exception thrown
-        subprocess.check_output(['apachectl', '-M'])
-        if (config['platform'] == 'linux'):
-
-            if (config['dist'] == 'ubuntu'):
-                response = subprocess.call(['a2enmod', 'rewrite'])
+        apache_version = version_pattern.findall(apache_version)[0]
+        apache_version = apache_version[apache_version.index('/')+1:]
     except:
-        response = 1
+        print(version_fail)
+        apache_version = ''
+        response = False
 
-    if response == 0:
-        return True
-    else:
-        return False
-
-
-"""
-restart_apache
-
-Issues the approprate command to restart Apache.
-"""
-def restart_apache(config):
     if (config['platform'] == 'linux'):
+        try:
+            if (config['dist'] == 'ubuntu' or config['dist'] == 'debian'):
+                config['apache_conf'] = os.path.abspath('/etc/apache2/apache2.conf')
+                config['vhost_dir']   = os.path.abspath('/etc/apache2/sites-enabled')
+        except:
+            print(linux_fail)
+            response = False
+    
+    elif (config['platform'] == 'freebsd' and apache_version != ''):
+        try:
+            config['apache_conf'] = os.path.abspath('/usr/local/etc/apache'+apache_version.replace('.', '')+'/httpd.conf')
+            config['vhost_dir'] = os.path.abspath('/usr/local/etc/apache'+apache_version.replace('.', '')+'/Includes')
+        except:
+            print(freebsd_fail)
+            response = False
 
-        if (config['dist'] == 'ubuntu'):
-            subprocess.call(['apachectl', 'restart'])
-
-    return
+    return response
 
 
 """
@@ -275,13 +200,14 @@ def setup_repo():
             subprocess.call(['git', 'branch', 'chameleon'], stderr=tmpfile);
             subprocess.call(['git', 'remote', 'remove', 'origin'], stderr=tmpfile);
 
-        tmpstr = raw_input(ask_about_origin)
-        if (len(tmpstr) > 0 and tmpstr[0].lower() == 'y'):
-            tmpstr = raw_input(ask_for_url)
-            while (subprocess.call(['git', 'set-url', 'origin'],
-                stdout=tmpfile, stderr=tmpfile) != 0):
+            tmpstr = raw_input(ask_about_origin)
+            if (len(tmpstr) > 0 and tmpstr[0].lower() == 'y'):
+
                 tmpstr = raw_input(ask_for_url)
-                response = False
+                while (subprocess.call(['git', 'set-url', 'origin'],
+                    stdout=tmpfile, stderr=tmpfile) != 0):
+                    tmpstr = raw_input(ask_for_url)
+                    response = False
             
             response = True
 
@@ -290,7 +216,7 @@ def setup_repo():
 
 
 """
-ask_db_config
+db_config
 
 Ask user for MySQL database Setup.
 
@@ -343,11 +269,11 @@ def db_config(config):
 
         config['db_info'] = db_info.copy()
     
-    return
+    return True
 
 
 """
-create_config
+write_config_file
 
 Create a new configuration file from Chameleon's default configuration.
 """
@@ -376,6 +302,161 @@ def write_config_file(config):
         response = False
 
     return response
+
+
+"""
+create_vhost
+
+Create an Apache virtual host for the project.
+"""
+def create_vhost(config):
+    vhost       = ''
+    ip          = '*'
+    admin       = 'webmaster@localhost'
+    name        = ''
+    locale      = ''
+    vhost_file  = file 
+    tmpstr      = ''
+    response    = True
+
+    # Strings we need to use for the UI:
+    ask_about_ip      = 'Project requires specification of IP address? [y|N]\n--> '
+    ask_for_ip        = 'What IP would you like to use?\n--> '
+    ask_about_admin   = 'Would you like to specify a ServerAdmin? [Y|n]\n--> '
+    ask_for_admin     = 'What email would you like to set as ServerAdmin?\n--> '
+    ask_for_name      = 'What is the ServerName?\n--> '
+    ask_for_locale    = 'In which directory is the project located?\n--> '
+
+    ip_validation_err = '! IP address given is not valid !'
+    name_error        = '! Name given is not valid !'
+    filesystem_error  = '! Not a Valid !'
+    vhost_fopen_err   = 'Failed to open virutal host file in '+config['vhost_dir']+'/'+config['proj_name']+'.conf.'
+    vhost_fwrite_err  = 'Failed to write virutal host file in '+config['vhost_dir']+'/'+config['proj_name']+'.conf.'
+
+
+    try:
+        # Ask the things:
+        vhost_file = open(config['vhost_dir']+'/'+config['proj_name']+'.conf', 'w')
+    except:
+        print(vhost_fopen_err)
+
+
+    try:
+        tmpstr = raw_input(ask_about_ip)
+        if (len(tmpstr) > 0 and tmpstr[0].lower() == 'y'):
+            ip = raw_input(ask_for_ip)
+            while not valid(ip, 'ip'):
+                print ip_validation_error
+                ip = raw_input(ask_for_ip)
+
+        tmpstr = raw_input(ask_about_admin)
+        if (len(tmpstr) < 1 or  tmpstr[0].lower() != 'n'):
+            admin = raw_input(ask_for_admin)
+            while not valid(admin, 'name'):
+                print name_error
+                admin = raw_input(ask_for_admin)
+        
+        name = raw_input(ask_for_name)
+        while not valid(name, 'name'):
+            print name_error
+            name = raw_input(ask_for_name)
+
+        locale = raw_input(ask_for_locale)
+        while not valid(locale, 'path'):
+            print filesystem_error
+            name = raw_input(ask_for_name)
+
+        # Write the virtual host to memory:
+        vhost  = '<VirtualHost '+ip+':80>\n'
+        vhost += '\tServerAdmin '+admin+'\n'
+        vhost += '\tServerName '+name+'\n'
+        vhost += '\tDocumentRoot '+locale+'\n'
+        vhost += '\n\t<Directory '+locale+'/>\n'
+        vhost += '\tOptions Indexes FollowSymLinks\n'
+        vhost += '\tAllowOverride All\n'
+        vhost += '\tRequire all granted\n'
+        vhost += '\t</Directory>\n'
+        vhost += '</VirtualHost>\n'
+
+        # Dump vhost to the vhost file:
+        vhost_file.write(vhost)
+        vhost_file.close()
+    except:
+        print(vhost_fwrite_err)
+        response = False
+
+    return response
+
+
+"""
+enable_mod_rewrite
+
+return True  : mod_rewrite is enabled.
+return False : mod_rewrite not enabled.
+"""
+def enable_mod_rewrite(config):
+    response    = True
+    tp          = tempfile.TemporaryFile(mode='w')
+    httpd_conf  = ''
+    rewrite_str = re.compile('LoadModule rewrite_module libexec/apache24/mod_rewrite\.so')
+
+    # Messages
+    debian_fail     = 'Failed to enable_mod_rewrite for Debian'
+    httpd_read_err  = 'enable_mod_rewrite could not read httpd.conf.'
+    httpd_write_err = 'enable_mod_rewrite could not write httpd.conf.'
+
+
+    if (config['platform'] == 'linux'):
+
+        if (config['dist'] == 'ubuntu' or config['dist'] == 'debian'):
+            try:
+                response = subprocess.call(['a2enmod', 'rewrite'])
+            except:
+                print(debian_fail)
+                response = False
+
+    if (config['platform'] == 'freebsd'):
+        try:
+            tf         = open(config['apache_conf'], 'r+')
+            httpd_conf = tf.read()
+            tf.close()
+        except:
+            print(httpd_read_err)
+            response = False
+        
+        if (len(rewrite_str.findall(httpd_conf)) == 0):
+            try:
+                tf = open(config['apache_conf'], 'w')
+                tf.write(httpd_conf + '\nLoadModule rewrite_module libexec/apache24/mod_rewrite.so')
+                tf.close()
+            except:
+                print(httpd_write_err)
+                response = False
+
+    return response
+
+
+"""
+restart_apache
+
+Issues the approprate command to restart Apache.
+"""
+def restart_apache(config):
+    response = True
+    tf       = file
+
+    if (config['platform'] == 'linux'):
+
+        if (config['dist'] == 'ubuntu'):
+            if (subprocess.call(['apachectl', 'restart']) != 0):
+                response = False
+
+    if (config['platform'] == 'freebsd'):
+        if (subprocess.call(['apachectl', 'reload']) != 0):
+            response = False
+
+    return response
+
 
 
 if __name__ == '__main__':
