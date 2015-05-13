@@ -153,11 +153,12 @@ def create_vhost(config):
     name        = ''
     locale      = ''
     vhost_file  = open(config['vhost_dir']+'/'+config['proj_name']+'.conf', 'w')
+    tmpstr      = ''
 
     # Strings we need to use for the UI:
-    ask_about_ip      = 'Project requires specification of IP address? [y|n]\n--> '
+    ask_about_ip      = 'Project requires specification of IP address? [y|N]\n--> '
     ask_for_ip        = 'What IP would you like to use?\n--> '
-    ask_about_admin   = 'Would you like to specify a ServerAdmin? [y|n]\n--> '
+    ask_about_admin   = 'Would you like to specify a ServerAdmin? [Y|n]\n--> '
     ask_for_admin     = 'What email would you like to set as ServerAdmin?\n--> '
     ask_for_name      = 'What is the ServerName?\n--> '
     ask_for_locale    = 'In which directory is the project located?\n--> '
@@ -166,13 +167,15 @@ def create_vhost(config):
     filesystem_error  = '! Not a Valid !'
 
     # Ask the things:
-    if (raw_input(ask_about_ip)[0].lower() == 'y'):
+    tmpstr = raw_input(ask_about_ip)
+    if (len(tmpstr) > 0 and tmpstr[0].lower() == 'y'):
         ip = raw_input(ask_for_ip)
         while not valid(ip, 'ip'):
             print ip_validation_error
             ip = raw_input(ask_for_ip)
 
-    if (raw_input(ask_about_admin)[0].lower() == 'y'):
+    tmpstr = raw_input(ask_about_admin)
+    if (len(tmpstr) < 1 or  tmpstr[0].lower() != 'n'):
         admin = raw_input(ask_for_admin)
         while not valid(admin, 'name'):
             print name_error
@@ -258,23 +261,26 @@ indexed string (so a user can not leave the selection blank).
 def setup_repo():
     response          = True
     tmpfile           = tempfile.TemporaryFile(mode='w')
-    ask_about_repo    = 'Would you like to setup the git repo? [Y|n]\n'
+    ask_about_repo    = 'Would you like to setup the git repo? [y|N]\n'
     ask_about_repo   += '(This should only be done directly after cloning Chameleon)\n--> '
-    ask_about_origin  = 'Would you like to specify an address for origin? [Y|n]\n-->'
+    ask_about_origin  = 'Would you like to specify an address for origin? [y|N]\n-->'
+    tmpstr            = ''
 
     if (subprocess.call(['git', 'status'], stdout=tmpfile, stderr=tmpfile) != 0):
         print('! You are not in the git repo!')
         response = False
     else:
-        if (raw_input(ask_about_repo)[0].lower() != 'n'):
+        tmpstp = raw_input(ask_about_repo)
+        if (len(tmpstr) > 0 and tmpstr[0].lower() == 'y'):
             subprocess.call(['git', 'branch', 'chameleon'], stderr=tmpfile);
             subprocess.call(['git', 'remote', 'remove', 'origin'], stderr=tmpfile);
 
-        if (raw_input(ask_about_origin)[0].lower() != 'n'):
-            origin_url = raw_input(ask_for_url)
+        tmpstr = raw_input(ask_about_origin)
+        if (len(tmpstr) > 0 and tmpstr[0].lower() == 'y'):
+            tmpstr = raw_input(ask_for_url)
             while (subprocess.call(['git', 'set-url', 'origin'],
                 stdout=tmpfile, stderr=tmpfile) != 0):
-                origin_url = raw_input(ask_for_url)
+                tmpstr = raw_input(ask_for_url)
                 response = False
             
             response = True
@@ -298,10 +304,11 @@ def db_config(config):
     # If no, nevermind.
 
     db_info = {}
+    tmpstr  = ''
 
     # Strings for communication with user.
     ask_about_mysql = 'Would you like to enter MySQL database configuration?'
-    ask_about_mysql += ' [y|n]\n--> '
+    ask_about_mysql += ' [y|N]\n--> '
     ask_for_db_name = 'Database name------> '
     ask_for_db_user = 'Database username--> '
     ask_for_db_pass = 'Database password--> '
@@ -312,8 +319,8 @@ def db_config(config):
     db_pass_err = '! The password you entered is in valid !'
     db_host_err = '! The hostname you entered is in valid !'
 
-
-    if (raw_input(ask_about_mysql)[0].lower() == 'y'):
+    tmpstr = raw_input(ask_about_mysql)
+    if (len(tmpstr) > 0 and tmpstr[0].lower() == 'y'):
         db_info['name'] = raw_input(ask_for_db_name)
         while not valid(db_info['name'], 'name'):
             print(db_name_err)
