@@ -63,5 +63,4 @@ $nav_config = [
     'dirs' => false,
     'ignore' => ['404.php', 'default.php'],
     'ignore_files_by_ext' => ['.swp'],
-    'custom_html' => null
 ];
