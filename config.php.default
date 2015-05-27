@@ -1,6 +1,8 @@
 <?php
 require_once('vendor/autoload.php');
 
+use Epoque\Registry\Registry;
+
 
 error_reporting(E_ERROR | E_PARSE | E_WARNING);
 #(E_ERROR | E_PARSE | E_WARNING)

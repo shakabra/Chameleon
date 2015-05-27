@@ -1,3 +1,7 @@
 [submodule "markup"]
     path = vendor/epoque/markup 
     url  = git@github.com:Epoque-Tech/Markup.git
+
+[submodule "registry"]
+    path = vendor/epoque/registry
+    url  = git@github.com:Epoque-Tech/Registry.git

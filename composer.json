@@ -1,5 +1,10 @@
 {
     "require": {
         "monolog/monolog": "~1.13"
+    },
+    "autoload" : {
+        "psr-4" : {
+            "Epoque\\Registry\\" : "vendor/epoque/registry/src"
+        }
     }
 }
