@@ -14,6 +14,7 @@ define('HTML_DIR', 'resources/html');
 define('IMG_DIR', '/resources/img');
 define('JS_DIR', '/resources/js');
 define('JQUERY_UI_DIR', JS_DIR.'/jquery-ui-1.11.4.custom');
+define('MD_DIR', 'resources/md');
 define('PAGES_DIR', APP_ROOT.'/pages');
 define('SITE_TITLE', '|proj_name|');
 
