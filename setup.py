@@ -24,7 +24,7 @@ def main():
     config['platform']       = platform.system().lower()
     config['dist']           = ''
     config['proj_name']      = ask_name('project')
-    config['default_page']   = ask_name('page')
+    config['default_view']   = ask_name('view')
     config['default_config'] = 'config.php.default'
     config['db_info']        = {'name':'', 'user':'', 'pass':'', 'host':''}
 
@@ -287,7 +287,7 @@ def write_config_file(config):
     try:
         tmp_file = open(config['default_config'], 'r')
         tmp_config = tmp_file.read()
-        tmp_config = tmp_config.replace('|default_page|', config['default_page'])
+        tmp_config = tmp_config.replace('|default_view|', config['default_view'])
         tmp_config = tmp_config.replace('|proj_name|', config['proj_name'])
         tmp_config = tmp_config.replace('|db_name|', config['db_info']['name'])
         tmp_config = tmp_config.replace('|db_user|', config['db_info']['user'])
