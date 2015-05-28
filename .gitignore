@@ -1,2 +1,4 @@
 config.php
 index.php
+vendor/autoload.php
+vendor/composer
