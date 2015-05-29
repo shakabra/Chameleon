@@ -8,60 +8,51 @@ error_reporting(E_ERROR | E_PARSE | E_WARNING);
 // Setup some constants.
 define('APP_ROOT', __DIR__);
 define('BOOTSTRAP_DIR', 'resources/bootstrap/3.3.1');
-define('DEFAULT_VIEW', '|default_view|');
 define('CSS_DIR', '/resources/css');
 define('HTML_DIR', 'resources/html');
 define('IMG_DIR', '/resources/img');
 define('JS_DIR', '/resources/js');
 define('JQUERY_UI_DIR', JS_DIR.'/jquery-ui-1.11.4.custom');
-define('MD_DIR', 'resources/md');
-define('VIEWS_DIR', APP_ROOT.'/views');
 define('SITE_TITLE', '|proj_name|');
+
+/**
+ * Navigation/Views Configuration
+ *      VIEWS_DIR
+ *      Path to the directory with site's published content.
+ *
+ *      NAV_FILES
+ *      Boolean, to show files from nav_root in site's navigation.
+ *
+ *      NAV_DIRS
+ *      Boolean, to show directories from nav_root in site's navigation.
+ *
+ *      IGNORE_FILES
+ *      Array of files/dirs to ignore in the navigation.
+ *
+ *      IGNORE_EXTS
+ *      Array of file types by extension to ingore from nav_root.
+ */
+define('VIEWS_DIR', APP_ROOT.'/views');
+define('DEFAULT_VIEW', 'default.php');
+define('NAV_FILES', 'yes');
+define('NAV_DIRS', 'yes');
+define('IGNORE_FILES', '404.php default.php');
+define('IGNORE_EXTS', 'swp');
+
+/**
+ * MySQL settings
+ *      DB_DRIVER       Sets driver used by Database.php.
+ *      DB_NAME         The name of the database.
+ *      DB_USER         The MySQL database username.
+ *      DB_PASS         Password for the database user.
+ */
+define('DB_DRIVER', 'mysql');
+define('DB_NAME', '');
+define('DB_USER', '');
+define('DB_PASS', '');
+define('DB_HOST', '');
 
 // Dates Formatting
 define('PUBDATE_FORMAT', 'M d, Y');
 date_default_timezone_set('UTC');
 
-
-/**
- * MySQL settings
- *      db_driver       Sets driver used by Database.php.
- *      db_name         The name of the database.
- *      db_user         The MySQL database username.
- *      db_pass         Password for the database user.
- */
-
-$db_config = [
-    'db_driver' => 'mysql', 
-    'db_name' => '|db_name|', 
-    'db_user' => '|db_user|',
-    'db_pass' => '|db_pass|',
-    'db_host' => '|db_host|'
-];
-
-
-/**
- * Navigation Configuration
- *      nav_root
- *      Path to the directory with site's published content.
- *
- *      files 
- *      Boolean, to show files from nav_root in site's navigation.
- *
- *      dirs
- *      Boolean, to show directories from nav_root in site's navigation.
- *
- *      ignore
- *      Array of files/dirs to ignore in the navigation.
- *
- *      ignore_files_by_ext
- *      Array of file types by extension to ingore from nav_root.
- */
-
-$nav_config = [
-    'nav_root' => 'views',
-    'files' => true,
-    'dirs' => false,
-    'ignore' => ['404.php', 'default.php'],
-    'ignore_files_by_ext' => ['.swp'],
-];

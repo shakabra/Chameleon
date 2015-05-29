@@ -12,10 +12,10 @@ namespace Epoque\Chameleon;
 class Route
 {
     /** @var string The requested path. **/
-    protected $requestPath  = '';
+    public $requestPath  = '';
 
     /** @var string The filesystem resources the request is mapped to. **/
-    protected $responseFile = '';
+    public $responseFile = '';
 
 
     /**
