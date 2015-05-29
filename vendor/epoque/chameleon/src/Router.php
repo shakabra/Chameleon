@@ -75,7 +75,7 @@ class Router
 
     private function validRoute($route)
     {
-        if (is_view($route) && ! ignored($route)) {
+        if (self::isView($route) && ! self::ignored($route)) {
             return true;
         } else {
             return false;
@@ -95,10 +95,9 @@ class Router
             $tmp = scandir(VIEWS_DIR);
             array_shift($tmp);
             array_shift($tmp);
-            print '<p>VIEWS_DIR contents: '; print_r($tmp); print '</p>';
         }
 
-        return $view;
+        return True;
     }
 
     public static function toHtml()
