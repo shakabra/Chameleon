@@ -35,6 +35,35 @@ class Router
 
 
     /**
+     * ignored
+     *
+     * Checks the config file to see if the requested route should be ignored.
+     *
+     * @param Route $route a route object (see Route.php)
+     * @return Boolean true  : If the path should be ignored
+     *                 false : If the path should be processed
+     */
+ 
+    private function ignored($route) {
+        $responFile = $route->responseFile;
+        $ext = pathinfo($rp)['extension'];
+
+        $ignoredFiles = array();
+        array_push($ignoredFiles, explode(' ', IGNORE_FILES));
+
+        $ignoredExt = array();
+        array_push($ignoredExt, explode(' ', IGNORE_EXT));
+        
+        if (in_array(basename($responseFile), $ignoredFiles)) {
+            return true;
+        } else if (in_array($ext, $ignoredExt)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * validRoute
      *
      * Checks if a given route is considered valid.
@@ -46,7 +75,11 @@ class Router
 
     private function validRoute($route)
     {
-        return True;
+        if (is_view($route) && ! ignored($route)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
@@ -67,7 +100,6 @@ class Router
 
         return $view;
     }
-
 
     public static function toHtml()
     {
